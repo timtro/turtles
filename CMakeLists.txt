@@ -32,5 +32,6 @@ endif()
 # set(CMAKE_MODULE_PATH "/usr/share/SFML/cmake/Modules/" $CMAKE_MODULE_PATH)
 # find_package(SFML 2 REQUIRED COMPONENTS graphics window system)
 # target_link_libraries(circle ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+find_package(units)
 
 add_subdirectory(oo-turtle)
