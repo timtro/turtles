@@ -1,4 +1,6 @@
 #include "OOTurtle.hpp"
+#include <sstream>
+#include <iostream>
 
 // #include <SFML/Graphics.hpp>
 
@@ -19,11 +21,18 @@ int main() {
   //   window.display();
   // }
 
-  OOTurtle turtle;
+  std::ostringstream oss;
+  OOTurtle turtle(oss);
 
-  turtle.move(20);
-  turtle.turn(degree_t{90});
-  turtle.move(20);
+  int r = 50;
 
+  turtle.move(r);
+  turtle.turn(degree_t{120});
+  turtle.move(r);
+  turtle.turn(degree_t{120});
+  turtle.move(r);
+  turtle.turn(degree_t{120});
+  
+  std::cout << oss.str();
   return 0;
 }
