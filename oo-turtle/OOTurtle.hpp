@@ -1,3 +1,5 @@
+// Object to hold turtle state and implement turtle interface.
+//
 #pragma once
 
 #include <sstream>
