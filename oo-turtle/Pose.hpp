@@ -8,7 +8,7 @@
 using units::angle::degree_t;
 
 struct Pose {
-  int x{0}, y{0};
+  double x{0}, y{0};
   degree_t th{0};
 };
 

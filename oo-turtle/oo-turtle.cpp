@@ -3,17 +3,19 @@
 // the interface.
 
 #include "OOTurtle.hpp"
+#include <catch/catch.hpp>
 #include <iostream>
 #include <sstream>
 
-int main() {
+TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
+          "crude function interface") {
 
   std::ostringstream oss; // Log written into a stringstream.
   OOTurtle turtle(oss);
 
-  int r = 50;
+  auto initial = turtle;
 
-  // Equilateral triangle. Should be an invariant transformation on the state.
+  const double r = 10;
   turtle.move(r);
   turtle.turn(degree_t{120});
   turtle.move(r);
@@ -22,5 +24,9 @@ int main() {
   turtle.turn(degree_t{120});
 
   std::cout << oss.str();
-  return 0;
+
+  // NB: Couldn't write these tests without writing getters.
+  REQUIRE(turtle.get_x() == Approx(initial.get_x()));
+  REQUIRE(turtle.get_y() == Approx(initial.get_y()));
+  REQUIRE(turtle.get_th() == Approx(initial.get_th()));
 }

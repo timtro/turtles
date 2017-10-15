@@ -2,7 +2,7 @@
 //
 #pragma once
 
-#include "../lib/Pose.hpp"
+#include "Pose.hpp"
 #include <sstream>
 
 class OOTurtle {
@@ -14,4 +14,8 @@ public:
   OOTurtle(std::ostringstream &);
   void move(int r);
   void turn(degree_t);
+
+  decltype(Pose::x) get_x() { return this->m_pose.x; }
+  decltype(Pose::y) get_y() { return this->m_pose.y; }
+  decltype(Pose::th) get_th() { return this->m_pose.th; }
 };
