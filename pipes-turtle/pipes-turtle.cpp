@@ -21,6 +21,7 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
 
 TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
           "dot-style-piping.") {
+
   Pose initial{0, 0, degree_t{0}};
   const auto final = move(10, initial)
                          .turn(degree_t{120})
@@ -28,6 +29,7 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
                          .turn(degree_t{120})
                          .move(10)
                          .turn(degree_t{120});
+
   REQUIRE(final.x == Approx(initial.x));
   REQUIRE(final.y == Approx(initial.y));
   REQUIRE(final.th == Approx(initial.th));
@@ -35,8 +37,8 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
 
 TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
           "curried functions and pipes.") {
-  Pose initial{0, 0, degree_t{0}};
 
+  Pose initial{0, 0, degree_t{0}};
   auto cmove = tf::curry(::move);
   auto cturn = tf::curry(::turn);
 
