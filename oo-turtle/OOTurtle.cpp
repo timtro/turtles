@@ -3,13 +3,6 @@
 using units::math::sin;
 using units::math::cos;
 
-// TODO: Replace oss with boost.Log2
-
-std::ostream &operator<<(std::ostream &os, const Pose &p) {
-  os << '[' << p.x << ", " << p.y << ", " << p.th << ']';
-  return os;
-}
-
 OOTurtle::OOTurtle(std::ostringstream &oss) : m_oss(oss) {}
 
 Pose advanced_position(Pose x0, int r) {
