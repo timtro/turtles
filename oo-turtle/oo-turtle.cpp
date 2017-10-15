@@ -1,6 +1,6 @@
 #include "OOTurtle.hpp"
-#include <sstream>
 #include <iostream>
+#include <sstream>
 
 // #include <SFML/Graphics.hpp>
 
@@ -32,7 +32,7 @@ int main() {
   turtle.turn(degree_t{120});
   turtle.move(r);
   turtle.turn(degree_t{120});
-  
+
   std::cout << oss.str();
   return 0;
 }
