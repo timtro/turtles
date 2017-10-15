@@ -35,3 +35,4 @@ endif()
 find_package(units)
 
 add_subdirectory(oo-turtle)
+add_subdirectory(lib)
