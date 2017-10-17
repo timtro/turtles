@@ -27,7 +27,7 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
   );
   // clang-format on
 
-  auto[a, final] = triangle(initial);
+  auto [a, final] = triangle(initial);
   REQUIRE(final.x == Approx(initial.x));
   REQUIRE(final.y == Approx(initial.y));
   REQUIRE(final.th == Approx(initial.th));

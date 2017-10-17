@@ -20,8 +20,8 @@ namespace tf {
 
   template <typename F, typename... Fs>
   constexpr decltype(auto) compose(F f, Fs... fs) {
-    if
-      constexpr(sizeof...(fs) < 1) return [f](auto &&x) -> decltype(auto) {
+    if constexpr (sizeof...(fs) < 1)
+      return [f](auto &&x) -> decltype(auto) {
         return std::invoke(f, std::forward<decltype(x)>(x));
       };
     else
@@ -32,9 +32,8 @@ namespace tf {
 
   template <typename T, typename F0, typename... Fs>
   constexpr decltype(auto) pipe(T &&x, F0 f, Fs... gh) {
-    if
-      constexpr(sizeof...(Fs) <
-                1) return std::invoke(f, std::forward<decltype(x)>(x));
+    if constexpr (sizeof...(Fs) < 1)
+      return std::invoke(f, std::forward<decltype(x)>(x));
     else
       return pipe(std::invoke(f, std::forward<decltype(x)>(x)), gh...);
   }
@@ -53,8 +52,8 @@ namespace tf {
 
   template <typename F>
   constexpr decltype(auto) curry(F f) {
-    if
-      constexpr(dtl_::is_nullary_v<F>) return std::invoke(f);
+    if constexpr (dtl_::is_nullary_v<F>)
+      return std::invoke(f);
     else
       return [f](auto &&x) {
         return curry(
@@ -68,9 +67,8 @@ namespace tf {
   template <typename F>
   constexpr decltype(auto) curry···(F f) {
     return [f](auto x) -> decltype(auto) {
-      if
-        constexpr(std::is_same<std::decay_t<decltype(x)>,
-                               call_t>::value) return std::invoke(f);
+      if constexpr (std::is_same<std::decay_t<decltype(x)>, call_t>::value)
+        return std::invoke(f);
       else
         return curry···(
             // perfectly capture x here:
