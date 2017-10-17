@@ -8,7 +8,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 set(c++std "-std=c++17")
 set(common "-fno-omit-frame-pointer -pg")
-set(warnings "-Wall -Wextra -Werror -pedantic")
+set(warnings "-Wall -Wextra -pedantic") # -Werror
 set(optimizations_debug "-O2")
 set(optimizations_release "-O3 -flto -ffast-math")
 set(debug "-g")
@@ -34,6 +34,7 @@ endif()
 # target_link_libraries(circle ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 find_package(units)
 
+add_subdirectory(lib)
 add_subdirectory(oo-turtle)
 add_subdirectory(pipes-turtle)
-add_subdirectory(lib)
+add_subdirectory(state-monad-turtle)
