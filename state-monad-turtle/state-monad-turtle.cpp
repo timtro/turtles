@@ -1,4 +1,4 @@
-#include "../include/function-operations.hpp"
+#include "../include/tfunc/function-operations.hpp"
 #include "Pose.hpp"
 
 #include <catch/catch.hpp>
