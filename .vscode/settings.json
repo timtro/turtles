@@ -35,6 +35,16 @@
     "tuple": "cpp",
     "type_traits": "cpp",
     "typeinfo": "cpp",
-    "utility": "cpp"
+    "utility": "cpp",
+    "csignal": "cpp",
+    "cstdarg": "cpp",
+    "atomic": "cpp",
+    "codecvt": "cpp",
+    "condition_variable": "cpp",
+    "mutex": "cpp",
+    "thread": "cpp",
+    "__config": "cpp",
+    "__nullptr": "cpp",
+    "algorithm": "cpp"
   }
 }

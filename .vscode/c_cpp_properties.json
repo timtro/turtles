@@ -30,7 +30,7 @@
         "/usr/local/include",
         "/usr/include/x86_64-linux-gnu",
         "/usr/include",
-        "/usr/include/c++/6",
+        "/usr/include/c++/7",
         "/usr/include/x86_64-linux-gnu/c++/6",
         "/usr/local/include",
         "/usr/lib/clang/6.0.0/include",
