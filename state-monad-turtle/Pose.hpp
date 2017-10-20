@@ -41,9 +41,9 @@ template <class State, class F>
 auto mbind(State m, F f) {
   return [=](auto stateData) {
     // Once given state data, run the State and unpack the result
-    auto &&[x, s] = m(stateData);
+    auto &&[retVal, newStateData] = std::invoke(m, stateData);
     // forward the result to the (A → M<B>) function.
-    return f(x)(s);
+    return f(retVal)(newStateData);
   };
 }
 
@@ -55,8 +55,8 @@ auto mbind(State m, F f) {
 template <class State, class F>
 auto mthen(State m, F f) {
   return [=](auto stateData) {
-    auto &&[x, s] = m(stateData);
-    return f(s);
+    auto &&newStateData = std::invoke(m, stateData).second;
+    return f(newStateData);
   };
 }
 
