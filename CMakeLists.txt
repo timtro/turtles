@@ -2,12 +2,14 @@ cmake_minimum_required (VERSION 2.8)
 
 project(turtles)
 
-# set(CMAKE_CXX_COMPILER /usr/bin/g++-7)
+# set(CMAKE_CXX_COMPILER /usr/bin/clang++-6.0)
+set(CMAKE_CXX_COMPILER /usr/bin/g++-7)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
-set(c++std "-std=c++17 -stdlib=libstdc++")
-# set(c++std "-std=c++17")
+set(c++std "-std=c++17")
+# set(c++std "-std=c++17 -stdlib=libc++")
+# set(c++std "-std=c++17 -stdlib=libstdc++")
 set(common "-fno-omit-frame-pointer -pg")
 set(warnings "-Wall -Wextra -pedantic") # -Werror
 set(optimizations_debug "-O2")
@@ -40,3 +42,4 @@ add_subdirectory(oo-turtle)
 add_subdirectory(pipes-turtle)
 add_subdirectory(state-monad-turtle)
 add_subdirectory(optional-monad-turtle)
+add_subdirectory(either-monad-turtle)
