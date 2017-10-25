@@ -24,11 +24,11 @@ using StateWith = std::pair<T, Pose>;
 StateWith<EitherErrorOr<double>> move(double, const Pose &);
 StateWith<EitherErrorOr<degree_t>> turn(degree_t, const Pose &);
 
-template <State, typename F>
+template <typename State, typename F>
 auto mbind(State m, F f) { // Here, m is a callable.
-  using R = invoke_result_t<> using T =
-      double; // I need to get the non-error type in the variant.
-  return [=](auto stateData) -> decltype(std::invoke(f, std::get<T>(m))) {
+  return [=](auto stateData) {
+    using Action_t = std::invoke_result_t<F, decltype(stateData)>;
+    using T = typename Action_t::first_type;
     if (std::holds_alternative<T>(m)) {
       auto &&[retVal, newStateData] = std::invoke(m, stateData);
       return f(retVal)(newStateData);

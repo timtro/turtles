@@ -25,20 +25,22 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
 
     // const Pose final = std::get<Pose>(eitherFinal);
 
-    // REQUIRE(final.x == Approx(initial.x));
-    // REQUIRE(final.y == Approx(initial.y));
-    // REQUIRE(final.th == Approx(initial.th));
+    // clang-format off
+    auto triangle = mdo(
+      mmove(10),
+      mturn(degree_t{120}),
+      mmove(10),
+      mturn(degree_t{120}),
+      mmove(10),
+      mturn(degree_t{120})
+    );
+    // clang-format on
 
-    auto thing = mbind(mmove(10), [=](auto) { return mmove(10); });
+    auto [a, final] = triangle(initial);
+    REQUIRE(final.x == Approx(initial.x));
+    REQUIRE(final.y == Approx(initial.y));
+    REQUIRE(final.th == Approx(initial.th));
 
-    // auto triangle = mdo(
-    //   mmove(10),
-    //   mturn(degree_t{120}),
-    //   mmove(10),
-    //   mturn(degree_t{120}),
-    //   mmove(10),
-    //   mturn(degree_t{120})
-    // );
     REQUIRE(true);
   }
 
