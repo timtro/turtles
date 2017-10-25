@@ -20,7 +20,7 @@ using std::experimental::is_detected_v;
 namespace tf {
 
   namespace dtl_ {
-    template <class T>
+    template <typename T>
     using has_reserve_t =
         decltype(std::declval<T &>().reserve(std::declval<size_t>()));
 

@@ -23,7 +23,7 @@ StateWith<degree_t> turn(degree_t, const Pose &);
 // Functions supporting the State-Monad for the Turtle application.
 //
 // mreturn :
-template <class A>
+template <typename A>
 auto mreturn(const A &a) {
   return [=](auto stateData) { return std::make_pair(a, stateData); };
 }
@@ -37,7 +37,7 @@ auto mreturn(const A &a) {
 // The bind operation gives us function composition. NOTE: I think the
 // convention of calling the function type Pose → (T, Pose) a `State` is
 // misleading. It should be called a state-function or state-processor.
-template <class State, class F>
+template <typename State, typename F>
 auto mbind(State m, F f) {
   return [=](auto stateData) {
     // Once given state data, run the State and unpack the result
@@ -52,7 +52,7 @@ auto mbind(State m, F f) {
 // simplified to:
 //  mthen : M<A> → M<B> → M<B> = State<Pose, A> → State<Pose, B> → State<Pose,
 //  B>
-template <class State, class F>
+template <typename State, typename F>
 auto mthen(State m, F f) {
   return [=](auto stateData) {
     auto &&newStateData = std::invoke(m, stateData).second;
@@ -62,7 +62,7 @@ auto mthen(State m, F f) {
 
 // Mimick Haskell's `do` notation by automatically binding arguments together,
 // each of which should be an element in the monad:
-template <class A, class B>
+template <typename A, typename B>
 auto mdo(A &&a, B &&b) {
   return mthen(a, b);
   // Can also implement this with bind if you:
@@ -71,7 +71,7 @@ auto mdo(A &&a, B &&b) {
   // return mbind(a, [=](auto) { return b; });
 }
 
-template <class A, class... As>
+template <typename A, typename... As>
 auto mdo(A &&a, As &&... as) {
   return mdo(a, mdo(as...));
 }
