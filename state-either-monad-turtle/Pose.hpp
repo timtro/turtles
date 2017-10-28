@@ -62,15 +62,16 @@ auto mthen(StateMA ma, StateMB mb) {
   };
 }
 
+template <class StateMA, class StateMB>
+auto operator>>(StateMA ma, StateMB mb) {
+  return mthen(ma, mb);
+}
+
 // Mimick Haskell's `do` notation by automatically binding arguments together,
 // each of which should be an element in the monad:
 template <typename A, typename B>
 auto mdo(A &&a, B &&b) {
   return mthen(a, b);
-  // Can also implement this with bind if you:
-  //          Throw away return values
-  //                       V
-  // return mbind(a, [=](auto) { return b; });
 }
 
 template <typename A, typename... As>

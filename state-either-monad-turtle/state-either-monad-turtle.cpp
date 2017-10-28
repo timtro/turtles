@@ -35,39 +35,49 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
     REQUIRE(final.th == Approx(initial.th));
   }
 
-  // SECTION(
-  //     "Be left apprximately invariant sent on the journey of an equilateral "
-  //     "triangle, using operator>> notation.") {
+  SECTION(
+      "Be left apprximately invariant sent on the journey of an equilateral "
+      "triangle, using operator>> notation.") {
 
-  //   // clang-format off
-  //   auto eitherFinal = move(10, initial) >> mturn(degree_t{120});
-  //           >> mmove(10) >> mturn(degree_t{120})
-  //           >> mmove(10) >> mturn(degree_t{120});
-  //   // clang-format on
+    // clang-format off
+    auto triangle = mmove(10) 
+                  >> mturn(degree_t{120})
+                  >> mmove(10)
+                  >> mturn(degree_t{120})
+                  >> mmove(10)
+                  >> mturn(degree_t{120});
+    // clang-format on
 
-  //   // const Pose final = std::get<Pose>(eitherFinal);
+    // const Pose final = std::get<Pose>(eitherFinal);
 
-  //   auto [a, final] = triangle(initial);
-  //   REQUIRE(final.x == Approx(initial.x));
-  //   REQUIRE(final.y == Approx(initial.y));
-  //   REQUIRE(final.th == Approx(initial.th));
-  // }
+    auto [a, final] = triangle(initial);
+    REQUIRE(final.x == Approx(initial.x));
+    REQUIRE(final.y == Approx(initial.y));
+    REQUIRE(final.th == Approx(initial.th));
+  }
 
-  // SECTION("When a `hitWall` error is inserted into the binding chain, the "
-  //         "remaining calls should be short circuited, and the error code left
-  //         " "in the result variable") {
+  SECTION("When a `hitWall` error is inserted into the binding chain, the "
+          "remaining calls should be short circuited, and the error code left "
+          "in the result variable") {
 
-  //   auto hitTheWall = [](auto) -> EitherErrorOr<Pose> {
-  //     return turtleError::hitWall;
-  //   };
+    auto hitTheWall = [](auto s) -> StateWith<EitherErrorOr<Pose>> {
+      return {turtleError::hitWall, s};
+    };
 
-  //   // clang-format off
-  // auto final = move(10, initial) >> mturn(degree_t{120}) >> hitTheWall
-  //                   >> mmove(10) >> mturn(degree_t{120})
-  //                   >> mmove(10) >> mturn(degree_t{120});
-  //   // clang-format on
+    // clang-format off
+    auto triangle = mmove(10) 
+                  >> mturn(degree_t{120}) >> hitTheWall
+                  >> mmove(10)               
+                  >> mturn(degree_t{120})
+                  >> mmove(10)
+                  >> mturn(degree_t{120});
+    // clang-format on
 
-  //   REQUIRE(std::holds_alternative<turtleError>(final));
-  //   REQUIRE(std::get<turtleError>(final) == turtleError::hitWall);
-  // }
+    auto [a, final] = triangle(initial);
+    REQUIRE(std::holds_alternative<turtleError>(a));
+    REQUIRE(std::get<turtleError>(a) == turtleError::hitWall);
+    REQUIRE(final.x == Approx(10));
+    REQUIRE(final.y == Approx(0));
+    REQUIRE(final.th == Approx(degree_t{120}));
+  }
 }
