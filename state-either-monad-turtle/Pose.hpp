@@ -30,39 +30,50 @@ auto mbind(StateMA ma, F f) {
   // f :: F = A → State → StateWith<B> = A → StateMonad<B>.
   return [=](auto state) {
     auto maResult = std::invoke(ma, state);
-    if (std::holds_alternative<turtleError>(maResult.first))
-      return [=](auto) { return maResult; };
-    else
+    using StateWithEitherErrorOrB =
+        std::invoke_result_t<std::invoke_result_t<F, decltype(maResult.first)>,
+                             decltype(maResult.second)>;
+    // Get this working
+    // using ErrType = typename std::variant_alternative<
+    //     1, decltype(StateWithEitherErrorOrB::first_type)>::type;
+    if (std::holds_alternative<turtleError>(maResult.first)) {
+      // This nasty but of code just converts an M<A+err> with an error to an
+      // M<B+err>.
+      StateWithEitherErrorOrB b = std::make_pair(
+          std::get<turtleError>(maResult.first), maResult.second);
+      return b;
+    } else
       return f(maResult.first)(maResult.second);
   };
 }
 
-// The mthen function, AKA `>>` is almost identical to mbind, except in the
-// case of the State monad, it discards the return value of M<A> so the
-// signature is simplified to:
-//  mthen : M<A> → M<B> → M<B> = State<Pose, A> → State<Pose, B> → State<Pose,
-//  B>
-// template <typename State, typename F>
-// auto mthen(State m, F f) {
-//   return [=](auto stateData) {
-//     auto &&newStateData = std::invoke(m, stateData).second;
-//     return f(newStateData);
-//   };
-// }
+template <class StateMA, class StateMB>
+auto mthen(StateMA ma, StateMB mb) {
+  return [=](auto state) {
+    auto maResult = std::invoke(ma, state);
+    using StateWithEitherErrorOrB =
+        std::invoke_result_t<StateMB, decltype(maResult.second)>;
+    if (std::holds_alternative<turtleError>(maResult.first)) {
+      StateWithEitherErrorOrB b = std::make_pair(
+          std::get<turtleError>(maResult.first), maResult.second);
+      return b;
+    } else
+      return mb(maResult.second);
+  };
+}
 
-// // Mimick Haskell's `do` notation by automatically binding arguments
-// together,
-// // each of which should be an element in the monad:
-// template <typename A, typename B>
-// auto mdo(A &&a, B &&b) {
-//   // return mthen(a, b);
-//   // Can also implement this with bind if you:
-//   //          Throw away return values
-//   //                       V
-//   return mbind(a, [=](auto) { return b; });
-// }
+// Mimick Haskell's `do` notation by automatically binding arguments together,
+// each of which should be an element in the monad:
+template <typename A, typename B>
+auto mdo(A &&a, B &&b) {
+  return mthen(a, b);
+  // Can also implement this with bind if you:
+  //          Throw away return values
+  //                       V
+  // return mbind(a, [=](auto) { return b; });
+}
 
-// template <typename A, typename... As>
-// auto mdo(A &&a, As &&... as) {
-//   return mdo(a, mdo(as...));
-// }
+template <typename A, typename... As>
+auto mdo(A &&a, As &&... as) {
+  return mdo(a, mdo(as...));
+}

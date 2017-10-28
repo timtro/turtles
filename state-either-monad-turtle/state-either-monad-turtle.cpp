@@ -19,15 +19,14 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
       "triangle, using \"do\" notation.") {
 
     // clang-format off
-    auto triangle = mbind(mmove(10), [=](auto){return mmove(10);});
-    // mdo(
-    //   mmove(10),
-    //   mturn(degree_t{120}),
-    //   mmove(10),
-    //   mturn(degree_t{120}),
-    //   mmove(10),
-    //   mturn(degree_t{120})
-    // );
+    auto triangle = mdo(
+                        mmove(10),
+                        mturn(degree_t{120}),
+                        mmove(10),
+                        mturn(degree_t{120}),
+                        mmove(10),
+                        mturn(degree_t{120})
+                      );
     // clang-format on
 
     auto [a, final] = triangle(initial);
