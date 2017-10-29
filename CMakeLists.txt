@@ -8,7 +8,8 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 # set(c++std "-std=c++17")
-set(c++std "-std=c++17 -stdlib=libc++ -lc++abi")
+set(c++std "-std=c++17 -stdlib=libc++")
+set(linker-flags "-lc++abi")
 # set(c++std "-std=c++17 -stdlib=libstdc++")
 set(common "-fno-omit-frame-pointer -pg")
 set(warnings "-Wall -Wextra -pedantic") # -Werror
@@ -18,7 +19,7 @@ set(debug "-g")
 set(perf_bench "-fno-omit-frame-pointer")
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} ${c++std} ${common} ${debug} ${warnings} ${optimizations_debug}")
-# set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} ${c++std}")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${linker-flags}")
 
 # for clang++ use -fuse-ld=gold to avoid LD error "File format not recognized"
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
