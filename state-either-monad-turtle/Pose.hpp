@@ -75,8 +75,8 @@ auto mthen(StateMA ma, StateMB mb) {
 
 template <class StateMA, class StateMB>
 auto operator>>(StateMA ma, StateMB mb) {
-  // return mthen(ma, mb);
-  return mbind(ma, [=](auto) { return mb; });
+  return mthen(ma, mb);
+  // return mbind(ma, [=](auto) { return mb; });
 }
 
 // Mimick Haskell's `do` notation by automatically binding arguments together,
