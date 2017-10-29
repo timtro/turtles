@@ -47,7 +47,9 @@ auto mbind(StateMA ma, F f) {
       // have to convert StateWith<EitherErrorOr<A> into
       // StateWith<EitherErrorOr<B>, even though we are certain that it's an
       // ErrType, and not an A or a B. Otherwise, we could return maResult.
-      return std::make_pair(std::get<ErrType>(maResult.first), maResult.second);
+      StateWithEitherErrorOrB b =
+          std::make_pair(std::get<ErrType>(maResult.first), maResult.second);
+      return b;
     } else
       return f(maResult.first)(maResult.second);
   };
@@ -73,7 +75,8 @@ auto mthen(StateMA ma, StateMB mb) {
 
 template <class StateMA, class StateMB>
 auto operator>>(StateMA ma, StateMB mb) {
-  return mthen(ma, mb);
+  // return mthen(ma, mb);
+  return mbind(ma, [=](auto) { return mb; });
 }
 
 // Mimick Haskell's `do` notation by automatically binding arguments together,
