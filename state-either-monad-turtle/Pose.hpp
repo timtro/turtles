@@ -81,12 +81,13 @@ auto operator>>(StateMA ma, StateMB mb) {
 
 // Mimick Haskell's `do` notation by automatically binding arguments together,
 // each of which should be an element in the monad:
-template <typename A, typename B>
-auto mdo(A &&a, B &&b) {
-  return mthen(a, b);
+template <typename StateMA, typename StateMB>
+auto mdo(StateMA &&ma, StateMB &&mb) {
+  return mthen(ma, mb);
+  // return mbind(ma, [=](auto) { return mb; });
 }
 
-template <typename A, typename... As>
-auto mdo(A &&a, As &&... as) {
-  return mdo(a, mdo(as...));
+template <typename StateMA, typename... StateMs>
+auto mdo(StateMA &&a, StateMs &&... ms) {
+  return mdo(a, mdo(ms...));
 }
