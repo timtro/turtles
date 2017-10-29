@@ -4,9 +4,13 @@
 #include <units.h>
 #include <variant>
 
+#include "../include/tfunc/function_traits.hpp"
+
 #define DISABLE_PREDEFINED_UNITS
 #define ENABLE_ANGLE_UNITS
 using units::angle::degree_t;
+
+using trait::invoke_result_t;
 
 struct Pose {
   const double x{0}, y{0};
@@ -26,33 +30,35 @@ StateWith<EitherErrorOr<degree_t>> turn(degree_t, const Pose &);
 
 template <typename StateMA, typename F>
 auto mbind(StateMA ma, F f) {
-  // a :: StateMonad<A> = State → StateWith<A>,
-  // f :: F = A → State → StateWith<B> = A → StateMonad<B>.
+  // ma :: StateMonad<A> = State → StateWith<EitherErrorOr<A>>,
+  //  f :: F = A → StateMonad<B> - A → State → StateWith<EitherErrorOr<B>>.
   return [=](auto state) {
+
     auto maResult = std::invoke(ma, state);
     using StateWithEitherErrorOrB =
-        std::invoke_result_t<std::invoke_result_t<F, decltype(maResult.first)>,
-                             decltype(maResult.second)>;
-    // Get this working
-    // using ErrType = typename std::variant_alternative<
-    //     1, decltype(StateWithEitherErrorOrB::first_type)>::type;
-    if (std::holds_alternative<turtleError>(maResult.first)) {
+        invoke_result_t<invoke_result_t<F, decltype(maResult.first)>,
+                        decltype(maResult.second)>;
+    using ErrType = typename std::variant_alternative<
+        1, decltype(StateWithEitherErrorOrB::first_type)>::type;
+
+    if (std::holds_alternative<ErrType>(maResult.first)) {
       // This nasty but of code just converts an M<A+err> with an error to an
       // M<B+err>.
-      StateWithEitherErrorOrB b = std::make_pair(
-          std::get<turtleError>(maResult.first), maResult.second);
+      StateWithEitherErrorOrB b =
+          std::make_pair(std::get<ErrType>(maResult.first), maResult.second);
       return b;
     } else
       return f(maResult.first)(maResult.second);
   };
 }
 
+// TODO: When the ErrType type-variable is working in mbind, use it here too.
 template <class StateMA, class StateMB>
 auto mthen(StateMA ma, StateMB mb) {
   return [=](auto state) {
     auto maResult = std::invoke(ma, state);
     using StateWithEitherErrorOrB =
-        std::invoke_result_t<StateMB, decltype(maResult.second)>;
+        invoke_result_t<StateMB, decltype(maResult.second)>;
     if (std::holds_alternative<turtleError>(maResult.first)) {
       StateWithEitherErrorOrB b = std::make_pair(
           std::get<turtleError>(maResult.first), maResult.second);

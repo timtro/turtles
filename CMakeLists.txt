@@ -2,13 +2,13 @@ cmake_minimum_required (VERSION 2.8)
 
 project(turtles)
 
-# set(CMAKE_CXX_COMPILER /usr/bin/clang++-6.0)
-set(CMAKE_CXX_COMPILER /usr/bin/g++-7)
+set(CMAKE_CXX_COMPILER /usr/bin/clang++-6.0)
+# set(CMAKE_CXX_COMPILER /usr/bin/g++-7)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
-set(c++std "-std=c++17")
-# set(c++std "-std=c++17 -stdlib=libc++")
+# set(c++std "-std=c++17")
+set(c++std "-std=c++17 -stdlib=libc++ -lc++abi")
 # set(c++std "-std=c++17 -stdlib=libstdc++")
 set(common "-fno-omit-frame-pointer -pg")
 set(warnings "-Wall -Wextra -pedantic") # -Werror
