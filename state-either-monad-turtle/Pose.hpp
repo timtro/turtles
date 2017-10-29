@@ -35,18 +35,19 @@ auto mbind(StateMA ma, F f) {
   return [=](auto state) {
 
     auto maResult = std::invoke(ma, state);
+    // Deduce output types:
     using StateWithEitherErrorOrB =
         invoke_result_t<invoke_result_t<F, decltype(maResult.first)>,
                         decltype(maResult.second)>;
-    using ErrType = typename std::variant_alternative<
-        1, decltype(StateWithEitherErrorOrB::first_type)>::type;
+    using ErrType = typename std::variant_alternative_t<
+        1, decltype(StateWithEitherErrorOrB::first)>;
 
     if (std::holds_alternative<ErrType>(maResult.first)) {
-      // This nasty but of code just converts an M<A+err> with an error to an
-      // M<B+err>.
-      StateWithEitherErrorOrB b =
-          std::make_pair(std::get<ErrType>(maResult.first), maResult.second);
-      return b;
+      // Since both paths out of this function have to return the same type, we
+      // have to convert StateWith<EitherErrorOr<A> into
+      // StateWith<EitherErrorOr<B>, even though we are certain that it's an
+      // ErrType, and not an A or a B. Otherwise, we could return maResult.
+      return std::make_pair(std::get<ErrType>(maResult.first), maResult.second);
     } else
       return f(maResult.first)(maResult.second);
   };
@@ -59,9 +60,11 @@ auto mthen(StateMA ma, StateMB mb) {
     auto maResult = std::invoke(ma, state);
     using StateWithEitherErrorOrB =
         invoke_result_t<StateMB, decltype(maResult.second)>;
-    if (std::holds_alternative<turtleError>(maResult.first)) {
-      StateWithEitherErrorOrB b = std::make_pair(
-          std::get<turtleError>(maResult.first), maResult.second);
+    using ErrType = typename std::variant_alternative_t<
+        1, decltype(StateWithEitherErrorOrB::first)>;
+    if (std::holds_alternative<ErrType>(maResult.first)) {
+      StateWithEitherErrorOrB b =
+          std::make_pair(std::get<ErrType>(maResult.first), maResult.second);
       return b;
     } else
       return mb(maResult.second);
