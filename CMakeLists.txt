@@ -1,11 +1,15 @@
 cmake_minimum_required (VERSION 2.8)
 
-project(turtles)
 
+
+set(CMAKE_C_COMPILER /usr/bin/clang-6.0)
 set(CMAKE_CXX_COMPILER /usr/bin/clang++-6.0)
+# set(CMAKE_C_COMPILER /usr/bin/gcc-7)
 # set(CMAKE_CXX_COMPILER /usr/bin/g++-7)
-set(CMAKE_BUILD_TYPE Release)
-set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+set(CMAKE_BUILD_TYPE Debug)
+# set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+
+project(turtles)
 
 # set(c++std "-std=c++17")
 set(c++std "-std=c++17 -stdlib=libc++")
@@ -22,17 +26,21 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} ${c++std} ${common} ${debug} ${war
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} ${c++std} ${common} ${warnings} ${optimizations_release}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${linker-flags}")
 
+message("Compiler is " ${CMAKE_CXX_COMPILER_ID})
+message("Build type is " ${CMAKE_BUILD_TYPE})
 # for clang++ use -fuse-ld=gold to avoid LD error "File format not recognized"
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  if(CMAKE_BUILD_TYPE MATCHES DEBUG)
+if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "[cC][lL][aA][nN][gG]")
+if(CMAKE_BUILD_TYPE MATCHES "Debug")
+    message("USING CLANG SANITIZERS")
     # set(sanitizer "-fsanitize=address")
-    # set(sanitizer "-fsanitize=memory")
+    set(sanitizer "-fsanitize=memory")
     # set(sanitizer "-fsanitize=memory -fsanitize-memory-track-origins")
     # set(sanitizer "-fsanitize=thread")
-    # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fuse-ld=gold")
-    # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${sanitizer}")
-  endif(CMAKE_BUILD_TYPE MATCHES DEBUG)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fuse-ld=gold")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${sanitizer}")
+  endif()
 endif()
+
 
 # set(CMAKE_MODULE_PATH "/usr/share/SFML/cmake/Modules/" $CMAKE_MODULE_PATH)
 # find_package(SFML 2 REQUIRED COMPONENTS graphics window system)
