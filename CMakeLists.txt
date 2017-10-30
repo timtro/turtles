@@ -4,21 +4,22 @@ project(turtles)
 
 set(CMAKE_CXX_COMPILER /usr/bin/clang++-6.0)
 # set(CMAKE_CXX_COMPILER /usr/bin/g++-7)
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 # set(c++std "-std=c++17")
 set(c++std "-std=c++17 -stdlib=libc++")
 set(linker-flags "-lc++abi")
 # set(c++std "-std=c++17 -stdlib=libstdc++")
-set(common "-fno-omit-frame-pointer -pg")
+set(common "-fno-omit-frame-pointer")
 set(warnings "-Wall -Wextra -pedantic") # -Werror
 set(optimizations_debug "-O2")
-set(optimizations_release "-O3 -flto -ffast-math")
-set(debug "-g")
+set(optimizations_release "-O3 -ffast-math")
+set(debug "-g -pg")
 set(perf_bench "-fno-omit-frame-pointer")
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} ${c++std} ${common} ${debug} ${warnings} ${optimizations_debug}")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} ${c++std} ${common} ${warnings} ${optimizations_release}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${linker-flags}")
 
 # for clang++ use -fuse-ld=gold to avoid LD error "File format not recognized"
