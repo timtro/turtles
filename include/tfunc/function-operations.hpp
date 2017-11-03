@@ -60,18 +60,18 @@ namespace tf {
       };
   }
 
-  // template <typename F>
-  // constexpr decltype(auto) curry···(F f) {
-  //   return [f](auto x) -> decltype(auto) {
-  //     if constexpr (std::is_same<std::decay_t<decltype(x)>, call_t>::value)
-  //       return std::invoke(f);
-  //     else
-  //       return curry···(
-  //           // perfectly capture x here:
-  //           [f, x](auto &&... xs) -> decltype(std::invoke(f, x, xs...)) {
-  //             return std::invoke(f, x, xs...);
-  //           });
-  //   };
-  // }
+  template <typename F>
+  constexpr decltype(auto) curry···(F f) {
+    return [f](auto x) -> decltype(auto) {
+      if constexpr (std::is_same<std::decay_t<decltype(x)>, call_t>::value)
+        return std::invoke(f);
+      else
+        return curry···(
+            // perfectly capture x here:
+            [f, x](auto &&... xs) -> decltype(std::invoke(f, x, xs...)) {
+              return std::invoke(f, x, xs...);
+            });
+    };
+  }
 
 } // namespace tf
