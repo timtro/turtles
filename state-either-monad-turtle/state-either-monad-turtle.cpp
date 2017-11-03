@@ -2,8 +2,9 @@
 #include "Pose.hpp"
 
 #include <catch/catch.hpp>
-
 #include <iostream>
+
+constexpr auto delta = std::numeric_limits<double>::epsilon() * 100;
 
 TEST_CASE("Using the Either monad, starting at the origin and turtle should…") {
 
@@ -29,10 +30,11 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
                       );
     // clang-format on
 
-    auto [a, final] = triangle(initial);
-    REQUIRE(final.x == Approx(initial.x));
-    REQUIRE(final.y == Approx(initial.y));
-    REQUIRE(final.th == Approx(initial.th));
+    auto[a, final] = triangle(initial);
+    std::cout << delta << std::endl;
+    REQUIRE(final.x == Approx(initial.x).margin(delta));
+    REQUIRE(final.y == Approx(initial.y).margin(delta));
+    REQUIRE(final.th == Approx(initial.th).margin(delta));
   }
 
   SECTION(
@@ -50,10 +52,10 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
 
     // const Pose final = std::get<Pose>(eitherFinal);
 
-    auto [a, final] = triangle(initial);
-    REQUIRE(final.x == Approx(initial.x));
-    REQUIRE(final.y == Approx(initial.y));
-    REQUIRE(final.th == Approx(initial.th));
+    auto[a, final] = triangle(initial);
+    REQUIRE(final.x == Approx(initial.x).margin(delta));
+    REQUIRE(final.y == Approx(initial.y).margin(delta));
+    REQUIRE(final.th == Approx(initial.th).margin(delta));
   }
 
   SECTION("When a `hitWall` error is inserted into the binding chain, the "
@@ -73,7 +75,7 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
                   >> mturn(degree_t{120});
     // clang-format on
 
-    auto [a, final] = triangle(initial);
+    auto[a, final] = triangle(initial);
     REQUIRE(std::holds_alternative<turtleError>(a));
     REQUIRE(std::get<turtleError>(a) == turtleError::hitWall);
     REQUIRE(final.x == Approx(10));

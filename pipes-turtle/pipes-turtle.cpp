@@ -3,6 +3,9 @@
 
 #include <catch/catch.hpp>
 
+constexpr auto delta = std::numeric_limits<double>::epsilon() * 100;
+
+
 TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
           "crude function interface") {
 
@@ -14,9 +17,9 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
   const auto s5 = move(10, s4);
   const auto final = turn(degree_t{120}, s5);
 
-  REQUIRE(final.x == Approx(initial.x));
-  REQUIRE(final.y == Approx(initial.y));
-  REQUIRE(final.th == Approx(initial.th));
+  REQUIRE(final.x == Approx(initial.x).margin(delta));
+  REQUIRE(final.y == Approx(initial.y).margin(delta));
+  REQUIRE(final.th == Approx(initial.th).margin(delta));
 }
 
 TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
@@ -30,9 +33,9 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
                          .move(10)
                          .turn(degree_t{120});
 
-  REQUIRE(final.x == Approx(initial.x));
-  REQUIRE(final.y == Approx(initial.y));
-  REQUIRE(final.th == Approx(initial.th));
+  REQUIRE(final.x == Approx(initial.x).margin(delta));
+  REQUIRE(final.y == Approx(initial.y).margin(delta));
+  REQUIRE(final.th == Approx(initial.th).margin(delta));
 }
 
 TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
@@ -52,7 +55,7 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
                               cturn(degree_t{120}));
   // clang-format on
 
-  REQUIRE(final.x == Approx(initial.x));
-  REQUIRE(final.y == Approx(initial.y));
-  REQUIRE(final.th == Approx(initial.th));
+  REQUIRE(final.x == Approx(initial.x).margin(delta));
+  REQUIRE(final.y == Approx(initial.y).margin(delta));
+  REQUIRE(final.th == Approx(initial.th).margin(delta));
 }

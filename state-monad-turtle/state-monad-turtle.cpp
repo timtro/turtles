@@ -4,6 +4,9 @@
 #include <catch/catch.hpp>
 #include <iostream>
 
+constexpr auto delta = std::numeric_limits<double>::epsilon() * 100;
+
+
 TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
           "the state-monad composition and 'do' notation") {
 
@@ -28,7 +31,7 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
   // clang-format on
 
   auto [a, final] = triangle(initial);
-  REQUIRE(final.x == Approx(initial.x));
-  REQUIRE(final.y == Approx(initial.y));
-  REQUIRE(final.th == Approx(initial.th));
+  REQUIRE(final.x == Approx(initial.x).margin(delta));
+  REQUIRE(final.y == Approx(initial.y).margin(delta));
+  REQUIRE(final.th == Approx(initial.th).margin(delta));
 }

@@ -3,9 +3,12 @@
 // the interface.
 
 #include "OOTurtle.hpp"
+
 #include <catch/catch.hpp>
 #include <iostream>
 #include <sstream>
+
+constexpr auto delta = std::numeric_limits<double>::epsilon() * 100;
 
 TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
           "crude function interface") {
@@ -26,7 +29,7 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
   std::cout << oss.str();
 
   // NB: Couldn't write these tests without writing getters.
-  REQUIRE(turtle.get_x() == Approx(initial.get_x()));
-  REQUIRE(turtle.get_y() == Approx(initial.get_y()));
-  REQUIRE(turtle.get_th() == Approx(initial.get_th()));
+  REQUIRE(turtle.get_x() == Approx(initial.get_x()).margin(delta));
+  REQUIRE(turtle.get_y() == Approx(initial.get_y()).margin(delta));
+  REQUIRE(turtle.get_th() == Approx(initial.get_th()).margin(delta));
 }

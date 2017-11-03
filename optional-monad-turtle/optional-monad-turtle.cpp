@@ -2,8 +2,10 @@
 #include "Pose.hpp"
 
 #include <catch/catch.hpp>
-
 #include <iostream>
+
+constexpr auto delta = std::numeric_limits<double>::epsilon() * 100;
+
 
 TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
           "optional monad and >>= style binding.") {
@@ -21,9 +23,9 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
                     >> mmove(10) >> mturn(degree_t{120});
   // clang-format on
 
-  REQUIRE(final->x == Approx(initial.x));
-  REQUIRE(final->y == Approx(initial.y));
-  REQUIRE(final->th == Approx(initial.th));
+  REQUIRE(final->x == Approx(initial.x).margin(delta));
+  REQUIRE(final->y == Approx(initial.y).margin(delta));
+  REQUIRE(final->th == Approx(initial.th).margin(delta));
 }
 
 TEST_CASE("Inserting a null unit in the binding chain should short circuit the "
