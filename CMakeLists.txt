@@ -50,6 +50,7 @@ find_package(units)
 
 add_subdirectory(lib)
 add_subdirectory(oo-turtle)
+add_subdirectory(writer-monad-turtle)
 add_subdirectory(pipes-turtle)
 add_subdirectory(state-monad-turtle)
 add_subdirectory(optional-monad-turtle)

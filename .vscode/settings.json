@@ -46,6 +46,7 @@
     "__config": "cpp",
     "__nullptr": "cpp",
     "algorithm": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "*.ipp": "cpp"
   }
 }
