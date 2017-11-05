@@ -1,24 +1,6 @@
-#pragma once
-
+#include <tuple>
 #include <functional>
-#include <sstream>
-#include <units.h>
-#include <utility>
-
-#define DISABLE_PREDEFINED_UNITS
-#define ENABLE_ANGLE_UNITS
-using units::angle::degree_t;
-
-struct Pose {
-  const double x{0}, y{0};
-  const degree_t th{0};
-};
-
-template <typename T>
-using StateWith = std::pair<T, Pose>;
-
-StateWith<double> move(double, const Pose &);
-StateWith<degree_t> turn(degree_t, const Pose &);
+#include "../include/Pose.hpp"
 
 // Functions supporting the State-Monad for the Turtle application.
 //

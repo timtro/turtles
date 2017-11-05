@@ -12,6 +12,8 @@ struct Pose;
 Pose move(double, const Pose &);
 Pose turn(degree_t, const Pose &);
 
+// We could simply inherit from the Pose from ../include/Pose.hpp, but it
+// creates a little more complexity than I'd like in a example.
 struct Pose {
   const double x{0}, y{0};
   const degree_t th{0};

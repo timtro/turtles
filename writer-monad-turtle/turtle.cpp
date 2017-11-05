@@ -4,11 +4,6 @@
 using units::math::cos;
 using units::math::sin;
 
-std::ostream &operator<<(std::ostream &os, const Pose &p) {
-  os << '[' << p.x << ", " << p.y << ", " << p.th << ']';
-  return os;
-}
-
 Writer<Pose> move(double r, const Pose &p0) {
   std::stringstream log;
   const auto dx = r * cos(p0.th);

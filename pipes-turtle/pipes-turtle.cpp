@@ -1,6 +1,8 @@
 #include "../include/test_fixtures.hpp"
 #include "../include/tfunc/function-operations.hpp"
-#include "Pose.hpp"
+
+// Not using ../include/Pose.hpp because we need
+#include "Pose-with-turtle.hpp"
 
 #include <catch/catch.hpp>
 

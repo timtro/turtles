@@ -1,32 +1,11 @@
-#pragma once
-
-#include <functional>
-#include <units.h>
-#include <variant>
-
+#include "../include/Pose.hpp"
 #include "../include/tfunc/function_traits.hpp"
 
-#define DISABLE_PREDEFINED_UNITS
-#define ENABLE_ANGLE_UNITS
-using units::angle::degree_t;
+#include <variant>
+#include <tuple>
+#include <functional>
 
 using trait::invoke_result_t;
-
-struct Pose {
-  const double x{0}, y{0};
-  const degree_t th{0};
-};
-
-enum class turtleError { hitWall, couldNotRotate };
-
-template <typename T>
-using EitherErrorOr = std::variant<T, turtleError>;
-
-template <typename T>
-using StateWith = std::pair<T, Pose>;
-
-StateWith<EitherErrorOr<double>> move(double, const Pose &);
-StateWith<EitherErrorOr<degree_t>> turn(degree_t, const Pose &);
 
 template <typename StateMA, typename F>
 auto mbind(StateMA ma, F f) {

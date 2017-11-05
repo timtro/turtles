@@ -1,14 +1,12 @@
-#include "Pose.hpp"
-
-#include <functional>
+#include "turtle.hpp"
 
 using units::math::cos;
 using units::math::sin;
 
-constexpr bool shitHappens = false;
+constexpr bool exceptionalError{false};
 
 StateWith<EitherErrorOr<double>> move(double r, const Pose &p0) {
-  if (shitHappens)
+  if (exceptionalError)
     return {turtleError::hitWall, p0};
   else {
     const auto dx = r * cos(p0.th);
@@ -18,7 +16,7 @@ StateWith<EitherErrorOr<double>> move(double r, const Pose &p0) {
 }
 
 StateWith<EitherErrorOr<degree_t>> turn(degree_t dth, const Pose &p0) {
-  if (shitHappens)
+  if (exceptionalError)
     return {turtleError::couldNotRotate, p0};
   else
     return {dth, {p0.x, p0.y, degree_t{std::fmod((p0.th + dth)(), 360)}}};

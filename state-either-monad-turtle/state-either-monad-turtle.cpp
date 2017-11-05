@@ -1,9 +1,8 @@
 #include "../include/test_fixtures.hpp"
 #include "../include/tfunc/function-operations.hpp"
-#include "Pose.hpp"
+#include "turtle.hpp"
 
 #include <catch/catch.hpp>
-#include <iostream>
 
 using test_fixtures::delta;
 
