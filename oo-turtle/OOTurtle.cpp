@@ -1,7 +1,9 @@
 #include "OOTurtle.hpp"
 
-using units::math::sin;
 using units::math::cos;
+using units::math::sin;
+
+constexpr bool exceptionalError{false};
 
 OOTurtle::OOTurtle(std::ostringstream &oss) : m_oss(oss) {}
 
@@ -12,12 +14,16 @@ Pose advanced_position(Pose x0, int r) {
 }
 
 void OOTurtle::move(int r) {
-  m_oss << "advancing from " << this->m_pose;
+  if (exceptionalError)
+    throw MovingError();
+  m_oss << "moving from " << this->m_pose;
   this->m_pose = advanced_position(this->m_pose, r);
   m_oss << " to " << this->m_pose << '\n';
 }
 
 void OOTurtle::turn(degree_t dth) {
+  if (exceptionalError)
+    throw MovingError();
   m_oss << "turning from " << this->m_pose;
   this->m_pose.th += dth;
   this->m_pose.th = degree_t{std::fmod(this->m_pose.th(), 360)};

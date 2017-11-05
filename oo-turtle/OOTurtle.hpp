@@ -19,3 +19,9 @@ public:
   decltype(Pose::y) get_y() { return this->m_pose.y; }
   decltype(Pose::th) get_th() { return this->m_pose.th; }
 };
+
+class MovingError : public std::exception {
+  const char *what() const noexcept override {
+    return "An exceptional event occured while moving";
+  }
+};
