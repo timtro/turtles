@@ -1,12 +1,12 @@
+#include "../include/test_fixtures.hpp"
 #include "../include/tfunc/function-operations.hpp"
 #include "Pose.hpp"
 
 #include <catch/catch.hpp>
 
-constexpr auto delta = std::numeric_limits<double>::epsilon() * 100;
+using test_fixtures::delta;
 
 TEST_CASE("Equilateral triangle movement should leave invariant Pose, using…") {
-
   // mmove : double → Pose → (double, Pose)
   auto cmove = tf::curry(::move);
   // mturn : degree_t → Pose → (degree_t, Pose)

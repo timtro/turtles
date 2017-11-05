@@ -1,11 +1,11 @@
+#include "../include/test_fixtures.hpp"
 #include "../include/tfunc/function-operations.hpp"
 #include "Pose.hpp"
 
 #include <catch/catch.hpp>
 #include <iostream>
 
-constexpr auto delta = std::numeric_limits<double>::epsilon() * 100;
-
+using test_fixtures::delta;
 
 TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
           "optional monad and >>= style binding.") {
