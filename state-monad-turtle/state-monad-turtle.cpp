@@ -62,14 +62,12 @@ TEST_CASE("Using the State monad, starting at the origin and turtle should…") 
       "… be left apprximately invariant sent on the journey of an equilateral "
       "triangle, using \"do\" notation.") {
     // clang-format off
-    auto triangle = mdo(
-                      mmove(10),
-                      mturn(degree_t{120}),
-                      mmove(10),
-                      mturn(degree_t{120}),
-                      mmove(10),
-                      mturn(degree_t{120})
-                    );
+    auto triangle = mdo(mmove(10),
+                        mturn(degree_t{120}),
+                        mmove(10),
+                        mturn(degree_t{120}),
+                        mmove(10),
+                        mturn(degree_t{120}));
     // clang-format on
 
     auto [a, final] = triangle(initial);

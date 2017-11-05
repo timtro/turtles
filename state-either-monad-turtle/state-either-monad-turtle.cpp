@@ -63,14 +63,12 @@ TEST_CASE(
       "triangle, using \"do\" notation.") {
 
     // clang-format off
-    auto triangle = mdo(
-                        mmove(10),
+    auto triangle = mdo(mmove(10),
                         mturn(degree_t{120}),
                         mmove(10),
                         mturn(degree_t{120}),
                         mmove(10),
-                        mturn(degree_t{120})
-                      );
+                        mturn(degree_t{120}));
     // clang-format on
 
     auto [a, final] = triangle(initial);

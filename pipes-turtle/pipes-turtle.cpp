@@ -61,13 +61,12 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using…")
   SECTION("… approximately point-free style") {
 
     // clang-format off
-    const auto triangle = tf::compose(
-                            cmove(10),
-                            cturn(degree_t{120}),
-                            cmove(10),
-                            cturn(degree_t{120}),
-                            cmove(10),
-                            cturn(degree_t{120}));
+    const auto triangle = tf::compose(cmove(10),
+                                      cturn(degree_t{120}),
+                                      cmove(10),
+                                      cturn(degree_t{120}),
+                                      cmove(10),
+                                      cturn(degree_t{120}));
     
     const auto final = triangle(initial);
     // clang-format on
@@ -81,12 +80,12 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using…")
 
     // clang-format off
     const auto final = tf::pipe(initial,
-                              cmove(10),
-                              cturn(degree_t{120}),
-                              cmove(10),
-                              cturn(degree_t{120}),
-                              cmove(10),
-                              cturn(degree_t{120}));
+                                cmove(10),
+                                cturn(degree_t{120}),
+                                cmove(10),
+                                cturn(degree_t{120}),
+                                cmove(10),
+                                cturn(degree_t{120}));
     // clang-format on
 
     REQUIRE(final.x == Approx(initial.x).margin(delta));
