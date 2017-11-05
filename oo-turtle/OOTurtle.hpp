@@ -25,3 +25,9 @@ class MovingError : public std::exception {
     return "An exceptional event occured while moving";
   }
 };
+
+class TurningError : public std::exception {
+  const char *what() const noexcept override {
+    return "An exceptional event occured while turning";
+  }
+};

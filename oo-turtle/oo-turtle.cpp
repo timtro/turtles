@@ -45,6 +45,7 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
 TEST_CASE(
     "Equilateral triangle movement should leave invariant Pose, using "
     "turtle object to hold state and try/catch blocks to handle errors.") {
+
   std::ostringstream log; // Log written into a stringstream.
   OOTurtle turtle(log);
 
@@ -57,7 +58,7 @@ TEST_CASE(
   }
   try {
     turtle.turn(degree_t{120});
-  } catch (MovingError) {
+  } catch (TurningError) {
     std::cout << "Moving error\n";
   }
   try {
@@ -67,7 +68,7 @@ TEST_CASE(
   }
   try {
     turtle.turn(degree_t{120});
-  } catch (MovingError) {
+  } catch (TurningError) {
     std::cout << "Moving error\n";
   }
   try {
@@ -77,7 +78,7 @@ TEST_CASE(
   }
   try {
     turtle.turn(degree_t{120});
-  } catch (MovingError) {
+  } catch (TurningError) {
     std::cout << "Moving error\n";
   }
 

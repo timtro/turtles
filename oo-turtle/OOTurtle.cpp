@@ -23,7 +23,7 @@ void OOTurtle::move(int r) {
 
 void OOTurtle::turn(degree_t dth) {
   if (exceptionalError)
-    throw MovingError();
+    throw TurningError();
   m_oss << "turning from " << this->m_pose;
   this->m_pose.th += dth;
   this->m_pose.th = degree_t{std::fmod(this->m_pose.th(), 360)};
