@@ -13,18 +13,18 @@ TEST_CASE("An equlateral triangular trajectory should leave the pose "
 
   Pose initial{0, 0, degree_t{0}};
 
-  // mmove : double → Pose → (double, Pose)
-  auto mmove = tf::curry(::move);
-  // mturn : degree_t → Pose → (degree_t, Pose)
-  auto mturn = tf::curry(::turn);
+  // cmove : double → Pose → (double, Pose)
+  auto cmove = tf::curry(::move);
+  // cturn : degree_t → Pose → (degree_t, Pose)
+  auto cturn = tf::curry(::turn);
 
   // clang-format off
   auto final = move(10, initial)
-    | mturn(degree_t{120})
-    | mmove(10)
-    | mturn(degree_t{120})
-    | mmove(10)
-    | mturn(degree_t{120});
+    | cturn(degree_t{120})
+    | cmove(10)
+    | cturn(degree_t{120})
+    | cmove(10)
+    | cturn(degree_t{120});
   // clang-format on
 
   REQUIRE(final.first.x == Approx(initial.x).margin(delta));

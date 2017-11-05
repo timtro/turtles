@@ -9,9 +9,9 @@
 using test_fixtures::delta;
 
 TEST_CASE("Equilateral triangle movement should leave invariant Pose, using…") {
-  // mmove : double → Pose → (double, Pose)
+  // cmove : double → Pose → (double, Pose)
   auto cmove = tf::curry(::move);
-  // mturn : degree_t → Pose → (degree_t, Pose)
+  // cturn : degree_t → Pose → (degree_t, Pose)
   auto cturn = tf::curry(::turn);
 
   Pose initial{0, 0, degree_t{0}};
@@ -44,7 +44,7 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using…")
     REQUIRE(final.th == Approx(initial.th).margin(delta));
   }
 
-  SECTION("… dot-style piping.") {
+  SECTION("… dot-style piping. (requires turtle methods in Pose)") {
 
     const auto final = move(10, initial)
                            .turn(degree_t{120})

@@ -11,21 +11,21 @@ TEST_CASE("Using the State monad, starting at the origin and turtle should…") 
 
   const Pose initial{0, 0, degree_t{0}};
 
-  // mmove : double → Pose → (double, Pose)
-  auto mmove = tf::curry(::move);
-  // mturn : degree_t → Pose → (degree_t, Pose)
-  auto mturn = tf::curry(::turn);
+  // cmove : double → Pose → (double, Pose)
+  auto cmove = tf::curry(::move);
+  // cturn : degree_t → Pose → (degree_t, Pose)
+  auto cturn = tf::curry(::turn);
 
   SECTION("… be Pose invariant sent on the journey of an equilateral triangle, "
           "using operator| notation.") {
 
     // clang-format off
-    auto triangle = mmove(10)
-              | [&](auto) { return mturn(degree_t{120}); } 
-              | [&](auto) { return mmove(10); }
-              | [&](auto) { return mturn(degree_t{120}); }
-              | [&](auto) { return mmove(10); }
-              | [&](auto) { return mturn(degree_t{120}); };
+    auto triangle = cmove(10)
+              | [&](auto) { return cturn(degree_t{120}); } 
+              | [&](auto) { return cmove(10); }
+              | [&](auto) { return cturn(degree_t{120}); }
+              | [&](auto) { return cmove(10); }
+              | [&](auto) { return cturn(degree_t{120}); };
     // clang-format on
 
     // const Pose final = std::get<Pose>(eitherFinal);
@@ -41,12 +41,12 @@ TEST_CASE("Using the State monad, starting at the origin and turtle should…") 
           "using operator>> notation.") {
 
     // clang-format off
-    auto triangle = mmove(10) 
-              >> mturn(degree_t{120})
-              >> mmove(10)
-              >> mturn(degree_t{120})
-              >> mmove(10)
-              >> mturn(degree_t{120});
+    auto triangle = cmove(10) 
+              >> cturn(degree_t{120})
+              >> cmove(10)
+              >> cturn(degree_t{120})
+              >> cmove(10)
+              >> cturn(degree_t{120});
     // clang-format on
 
     // const Pose final = std::get<Pose>(eitherFinal);
@@ -62,12 +62,12 @@ TEST_CASE("Using the State monad, starting at the origin and turtle should…") 
       "… be left apprximately invariant sent on the journey of an equilateral "
       "triangle, using \"do\" notation.") {
     // clang-format off
-    auto triangle = mdo(mmove(10),
-                        mturn(degree_t{120}),
-                        mmove(10),
-                        mturn(degree_t{120}),
-                        mmove(10),
-                        mturn(degree_t{120}));
+    auto triangle = mdo(cmove(10),
+                        cturn(degree_t{120}),
+                        cmove(10),
+                        cturn(degree_t{120}),
+                        cmove(10),
+                        cturn(degree_t{120}));
     // clang-format on
 
     auto [a, final] = triangle(initial);

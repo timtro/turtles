@@ -12,18 +12,18 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
 
   Pose initial{0, 0, degree_t{0}};
 
-  // mmove : double → Pose → (double, Pose)
-  auto mmove = tf::curry(::move);
-  // mturn : degree_t → Pose → (degree_t, Pose)
-  auto mturn = tf::curry(::turn);
+  // cmove : double → Pose → (double, Pose)
+  auto cmove = tf::curry(::move);
+  // cturn : degree_t → Pose → (degree_t, Pose)
+  auto cturn = tf::curry(::turn);
 
   // clang-format off
   auto final = move(10, initial)
-                | mturn(degree_t{120}) 
-                | mmove(10)
-                | mturn(degree_t{120})
-                | mmove(10)
-                | mturn(degree_t{120});
+                | cturn(degree_t{120}) 
+                | cmove(10)
+                | cturn(degree_t{120})
+                | cmove(10)
+                | cturn(degree_t{120});
   // clang-format on
 
   REQUIRE(final->x == Approx(initial.x).margin(delta));
@@ -36,20 +36,20 @@ TEST_CASE("Inserting a null unit in the binding chain should short circuit the "
 
   Pose initial{0, 0, degree_t{0}};
 
-  // mmove : double → Pose → (double, Pose)
-  auto mmove = tf::curry(::move);
-  // mturn : degree_t → Pose → (degree_t, Pose)
-  auto mturn = tf::curry(::turn);
+  // cmove : double → Pose → (double, Pose)
+  auto cmove = tf::curry(::move);
+  // cturn : degree_t → Pose → (degree_t, Pose)
+  auto cturn = tf::curry(::turn);
 
   auto kill = [](auto) -> std::optional<Pose> { return {}; };
 
   // clang-format off
   auto final = move(10, initial)
-                | mturn(degree_t{120}) | kill 
-                | mmove(10)
-                | mturn(degree_t{120})
-                | mmove(10)
-                | mturn(degree_t{120});
+                | cturn(degree_t{120}) | kill 
+                | cmove(10)
+                | cturn(degree_t{120})
+                | cmove(10)
+                | cturn(degree_t{120});
   // clang-format on
 
   REQUIRE(final.has_value() == false);
