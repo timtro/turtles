@@ -1,7 +1,7 @@
-#include "Pose.hpp"
+#include "turtle.hpp"
 
-using units::math::sin;
 using units::math::cos;
+using units::math::sin;
 
 Pose move(double r, const Pose &p0) {
   const auto dx = r * cos(p0.th);
