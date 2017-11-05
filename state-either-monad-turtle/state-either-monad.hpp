@@ -1,9 +1,9 @@
 #include "../include/Pose.hpp"
 #include "../include/tfunc/function_traits.hpp"
 
-#include <variant>
-#include <tuple>
 #include <functional>
+#include <tuple>
+#include <variant>
 
 using trait::invoke_result_t;
 
@@ -34,6 +34,11 @@ auto mbind(StateMA ma, F f) {
   };
 }
 
+template <typename StateM, typename F>
+auto operator|(StateM &&m, F &&f) {
+  return mbind(std::forward<StateM>(m), std::forward<F>(f));
+}
+
 // TODO: When the ErrType type-variable is working in mbind, use it here too.
 template <class StateMA, class StateMB>
 auto mthen(StateMA ma, StateMB mb) {
@@ -54,7 +59,7 @@ auto mthen(StateMA ma, StateMB mb) {
 
 template <class StateMA, class StateMB>
 auto operator>>(StateMA ma, StateMB mb) {
-  return mthen(ma, mb);
+  return mthen(std::forward<StateMA>(ma), std::forward<StateMB>(mb));
   // return mbind(ma, [=](auto) { return mb; });
 }
 

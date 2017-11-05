@@ -6,7 +6,8 @@
 
 using test_fixtures::delta;
 
-TEST_CASE("Using the Either monad, starting at the origin and turtle should…") {
+TEST_CASE(
+    "Using the State+Either monad, starting at the origin and turtle should…") {
 
   const Pose initial{0, 0, degree_t{0}};
 
@@ -14,6 +15,48 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
   auto mmove = tf::curry(::move);
   // mturn : degree_t → Pose → (degree_t, Pose)
   auto mturn = tf::curry(::turn);
+
+  SECTION("Be Pose invariant sent on the journey of an equilateral triangle, "
+          "using operator| notation.") {
+
+    // clang-format off
+    auto triangle = mmove(10)
+                  | [&](auto) { return mturn(degree_t{120}); } 
+                  | [&](auto) { return mmove(10); }
+                  | [&](auto) { return mturn(degree_t{120}); }
+                  | [&](auto) { return mmove(10); }
+                  | [&](auto) { return mturn(degree_t{120}); };
+    // clang-format on
+
+    // const Pose final = std::get<Pose>(eitherFinal);
+
+    auto [a, final] = triangle(initial);
+
+    REQUIRE(final.x == Approx(initial.x).margin(delta));
+    REQUIRE(final.y == Approx(initial.y).margin(delta));
+    REQUIRE(final.th == Approx(initial.th).margin(delta));
+  }
+
+  SECTION("Be Pose invariant sent on the journey of an equilateral triangle, "
+          "using operator>> notation.") {
+
+    // clang-format off
+    auto triangle = mmove(10) 
+                  >> mturn(degree_t{120})
+                  >> mmove(10)
+                  >> mturn(degree_t{120})
+                  >> mmove(10)
+                  >> mturn(degree_t{120});
+    // clang-format on
+
+    // const Pose final = std::get<Pose>(eitherFinal);
+
+    auto [a, final] = triangle(initial);
+
+    REQUIRE(final.x == Approx(initial.x).margin(delta));
+    REQUIRE(final.y == Approx(initial.y).margin(delta));
+    REQUIRE(final.th == Approx(initial.th).margin(delta));
+  }
 
   SECTION(
       "Be left apprximately invariant sent on the journey of an equilateral "
@@ -31,28 +74,7 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
     // clang-format on
 
     auto [a, final] = triangle(initial);
-    std::cout << delta << std::endl;
-    REQUIRE(final.x == Approx(initial.x).margin(delta));
-    REQUIRE(final.y == Approx(initial.y).margin(delta));
-    REQUIRE(final.th == Approx(initial.th).margin(delta));
-  }
 
-  SECTION(
-      "Be left apprximately invariant sent on the journey of an equilateral "
-      "triangle, using operator>> notation.") {
-
-    // clang-format off
-    auto triangle = mmove(10) 
-                  >> mturn(degree_t{120})
-                  >> mmove(10)
-                  >> mturn(degree_t{120})
-                  >> mmove(10)
-                  >> mturn(degree_t{120});
-    // clang-format on
-
-    // const Pose final = std::get<Pose>(eitherFinal);
-
-    auto [a, final] = triangle(initial);
     REQUIRE(final.x == Approx(initial.x).margin(delta));
     REQUIRE(final.y == Approx(initial.y).margin(delta));
     REQUIRE(final.th == Approx(initial.th).margin(delta));
@@ -76,6 +98,7 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
     // clang-format on
 
     auto [a, final] = triangle(initial);
+
     REQUIRE(std::holds_alternative<turtleError>(a));
     REQUIRE(std::get<turtleError>(a) == turtleError::hitWall);
     REQUIRE(final.x == Approx(10));

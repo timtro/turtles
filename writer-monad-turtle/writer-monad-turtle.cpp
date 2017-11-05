@@ -27,8 +27,6 @@ TEST_CASE("An equlateral triangular trajectory should leave the pose "
     | mturn(degree_t{120});
   // clang-format on
 
-  // std::cout << final.second;
-
   REQUIRE(final.first.x == Approx(initial.x).margin(delta));
   REQUIRE(final.first.y == Approx(initial.y).margin(delta));
   REQUIRE(final.first.th == Approx(initial.th).margin(delta));

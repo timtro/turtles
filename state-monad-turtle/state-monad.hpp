@@ -1,6 +1,6 @@
-#include <tuple>
-#include <functional>
 #include "../include/Pose.hpp"
+#include <functional>
+#include <tuple>
 
 // Functions supporting the State-Monad for the Turtle application.
 //
@@ -19,14 +19,19 @@ auto mreturn(const A &a) {
 // The bind operation gives us function composition. NOTE: I think the
 // convention of calling the function type Pose → (T, Pose) a `State` is
 // misleading. It should be called a state-function or state-processor.
-template <typename State, typename F>
-auto mbind(State m, F f) {
+template <typename StateM, typename F>
+auto mbind(StateM m, F f) {
   return [=](auto stateData) {
     // Once given state data, run the State and unpack the result
     auto &&[retVal, newStateData] = std::invoke(m, stateData);
     // forward the result to the (A → M<B>) function.
     return f(retVal)(newStateData);
   };
+}
+
+template <typename StateM, typename F>
+auto operator|(StateM &&m, F &&f) {
+  return mbind(std::forward<StateM>(m), std::forward<F>(f));
 }
 
 // The mthen function, AKA `>>` is almost identical to mbind, except in the case
@@ -40,6 +45,12 @@ auto mthen(State m, F f) {
     auto &&newStateData = std::invoke(m, stateData).second;
     return f(newStateData);
   };
+}
+
+template <class StateMA, class StateMB>
+auto operator>>(StateMA ma, StateMB mb) {
+  return mthen(std::forward<StateMA>(ma), std::forward<StateMB>(mb));
+  // return mbind(ma, [=](auto) { return mb; });
 }
 
 // Mimick Haskell's `do` notation by automatically binding arguments together,
