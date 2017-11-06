@@ -15,7 +15,7 @@ set(CMAKE_BUILD_TYPE Debug)
 set(c++std "-std=c++17 -stdlib=libc++")
 set(linker-flags "-lc++abi")
 # set(c++std "-std=c++17 -stdlib=libstdc++")
-set(common "-fno-omit-frame-pointer")
+set(common "-fno-omit-frame-pointer -fno-rtti")
 set(warnings "-Wall -Wextra -pedantic") # -Werror
 set(optimizations_debug "-O2")
 set(optimizations_release "-O3 -ffast-math")
