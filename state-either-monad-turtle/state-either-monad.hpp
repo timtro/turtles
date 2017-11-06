@@ -1,4 +1,3 @@
-#include "../include/Pose.hpp"
 #include "../include/tfunc/function_traits.hpp"
 
 #include <functional>

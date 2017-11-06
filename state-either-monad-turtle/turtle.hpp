@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../include/Pose.hpp"
 #include "state-either-monad.hpp"
 
 enum class turtleError { hitWall, couldNotRotate };
