@@ -8,6 +8,27 @@
 using test_fixtures::delta;
 using test_fixtures::manualLog;
 
+struct ComparatorWithReference {
+  const EitherErrorOr<Pose> reference;
+
+  // Case: we've visited upon a Pose type:
+  void operator()(const Pose p) {
+    // Fail if we got a Pose value while expecting an error:
+    REQUIRE_FALSE(std::holds_alternative<turtleError>(reference));
+    const Pose referencePose = std::get<Pose>(reference);
+    REQUIRE(p.x == Approx(referencePose.x).margin(delta));
+    REQUIRE(p.y == Approx(referencePose.y).margin(delta));
+    REQUIRE(p.th == Approx(referencePose.th).margin(delta));
+  }
+
+  // Case: we've visited upon a turtleError type:
+  void operator()(const turtleError err) {
+    // Fail if we got a turtleError value while expecting a Pose:
+    REQUIRE_FALSE(std::holds_alternative<Pose>(reference));
+    REQUIRE(err == std::get<turtleError>(reference));
+  }
+};
+
 TEST_CASE("Starting at the origin…") {
 
   Pose initial{0, 0, degree_t{0}};
@@ -21,20 +42,16 @@ TEST_CASE("Starting at the origin…") {
           "invairant, but should yield an expected log trace.") {
 
     // clang-format off
-  auto finalWM = move(10, initial)
-    | cturn(degree_t{120})
-    | cmove(10)
-    | cturn(degree_t{120})
-    | cmove(10)
-    | cturn(degree_t{120});
+    auto writerEitherfinal = move(10, initial)
+                            | cturn(degree_t{120})
+                            | cmove(10)
+                            | cturn(degree_t{120})
+                            | cmove(10)
+                            | cturn(degree_t{120});
     // clang-format on
 
-    const Pose final = std::get<Pose>(finalWM.first);
-
-    REQUIRE(final.x == Approx(initial.x).margin(delta));
-    REQUIRE(final.y == Approx(initial.y).margin(delta));
-    REQUIRE(final.th == Approx(initial.th).margin(delta));
-    REQUIRE(finalWM.second == std::string{manualLog});
+    std::visit(ComparatorWithReference{initial}, writerEitherfinal.first);
+    REQUIRE(writerEitherfinal.second == std::string{manualLog});
   }
 
   SECTION("… when a `hitWall` error is inserted into the binding chain, the "
@@ -51,18 +68,16 @@ TEST_CASE("Starting at the origin…") {
     };
 
     // clang-format off
-    auto finalWM = move(10, initial)
-                  | cturn(degree_t{120}) | hitTheWall
-                  | cmove(10)
-                  | cturn(degree_t{120})
-                  | cmove(10)
-                  | cturn(degree_t{120});
+    auto writerEitherfinal = move(10, initial)
+                            | cturn(degree_t{120}) | hitTheWall
+                            | cmove(10)
+                            | cturn(degree_t{120})
+                            | cmove(10)
+                            | cturn(degree_t{120});
     // clang-format on
 
-    std::cout << finalWM.second << std::endl;
-
-    REQUIRE(std::holds_alternative<turtleError>(finalWM.first));
-    REQUIRE(std::get<turtleError>(finalWM.first) == turtleError::hitWall);
-    REQUIRE(finalWM.second == std::string{manualLogWithErr});
+    std::visit(ComparatorWithReference{turtleError::hitWall},
+               writerEitherfinal.first);
+    REQUIRE(writerEitherfinal.second == std::string{manualLogWithErr});
   }
 }
