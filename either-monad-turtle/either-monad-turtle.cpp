@@ -1,9 +1,12 @@
+#include "../include/test_fixtures.hpp"
 #include "../include/tfunc/function-operations.hpp"
 #include "turtle.hpp"
 
 #include <catch/catch.hpp>
 
 #include <iostream>
+
+using test_fixtures::delta;
 
 TEST_CASE("Using the Either monad, starting at the origin and turtle should…") {
 
@@ -28,29 +31,29 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
 
     const Pose final = std::get<Pose>(eitherFinal);
 
-    REQUIRE(final.x == Approx(initial.x));
-    REQUIRE(final.y == Approx(initial.y));
-    REQUIRE(final.th == Approx(initial.th));
+    REQUIRE(final.x == Approx(initial.x).margin(delta));
+    REQUIRE(final.y == Approx(initial.y).margin(delta));
+    REQUIRE(final.th == Approx(initial.th).margin(delta));
   }
-  
-//   SECTION("When a `hitWall` error is inserted into the binding chain, the "
-//           "remaining calls should be short circuited, and the error code left "
-//           "in the result variable") {
 
-//     auto hitTheWall = [](auto) -> EitherErrorOr<Pose> {
-//       return turtleError::hitWall;
-//     };
+  SECTION("When a `hitWall` error is inserted into the binding chain, the "
+          "remaining calls should be short circuited, and the error code left "
+          "in the result variable") {
 
-//     // clang-format off
-//     auto final = move(10, initial)
-//                 >> cturn(degree_t{120}) >> hitTheWall
-//                 >> cmove(10)
-//                 >> cturn(degree_t{120})
-//                 >> cmove(10)
-//                 >> cturn(degree_t{120});
-//     // clang-format on
+    auto hitTheWall = [](auto) -> EitherErrorOr<Pose> {
+      return turtleError::hitWall;
+    };
 
-//     REQUIRE(std::holds_alternative<turtleError>(final));
-//     REQUIRE(std::get<turtleError>(final) == turtleError::hitWall);
-//   }
+    // clang-format off
+    auto final = move(10, initial)
+                | cturn(degree_t{120}) | hitTheWall
+                | cmove(10)
+                | cturn(degree_t{120})
+                | cmove(10)
+                | cturn(degree_t{120});
+    // clang-format on
+
+    REQUIRE(std::holds_alternative<turtleError>(final));
+    REQUIRE(std::get<turtleError>(final) == turtleError::hitWall);
+  }
 }
