@@ -14,9 +14,9 @@ TEST_CASE("An equlateral triangular trajectory should leave the pose "
   Pose initial{0, 0, degree_t{0}};
 
   // cmove : double → Pose → (double, Pose)
-  auto cmove = tf::curry(::move);
+  const auto cmove = tf::curry(::move);
   // cturn : degree_t → Pose → (degree_t, Pose)
-  auto cturn = tf::curry(::turn);
+  const auto cturn = tf::curry(::turn);
 
   // clang-format off
   auto final = move(10, initial)

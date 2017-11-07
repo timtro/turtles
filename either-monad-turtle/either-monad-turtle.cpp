@@ -12,7 +12,7 @@ struct ComparatorWithReference {
   const EitherErrorOr<Pose> reference;
 
   // Case: we've visited upon a Pose type:
-  void operator()(const Pose p){
+  void operator()(const Pose p) {
     // Fail if we got a Pose value while expecting an error:
     REQUIRE_FALSE(std::holds_alternative<turtleError>(reference));
     const Pose referencePose = std::get<Pose>(reference);
@@ -22,7 +22,7 @@ struct ComparatorWithReference {
   }
 
   // Case: we've visited upon a turtleError type:
-  void operator()(const turtleError err){
+  void operator()(const turtleError err) {
     // Fail if we got a turtleError value while expecting a Pose:
     REQUIRE_FALSE(std::holds_alternative<Pose>(reference));
     REQUIRE(err == std::get<turtleError>(reference));
@@ -34,9 +34,9 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
   const Pose initial{0, 0, degree_t{0}};
 
   // cmove : double → Pose → (double, Pose)
-  auto cmove = tf::curry(::move);
+  const auto cmove = tf::curry(::move);
   // cturn : degree_t → Pose → (degree_t, Pose)
-  auto cturn = tf::curry(::turn);
+  const auto cturn = tf::curry(::turn);
 
   SECTION("Be left apprximately invariant sent on the journy of an equilateral "
           "triangle.") {
@@ -71,6 +71,5 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
     // clang-format on
 
     std::visit(ComparatorWithReference{turtleError::hitWall}, eitherFinal);
-
   }
 }

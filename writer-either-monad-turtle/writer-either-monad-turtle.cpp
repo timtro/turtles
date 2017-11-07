@@ -34,9 +34,9 @@ TEST_CASE("Starting at the origin…") {
   Pose initial{0, 0, degree_t{0}};
 
   // cmove : double → Pose → (double, Pose)
-  auto cmove = tf::curry(::move);
+  const auto cmove = tf::curry(::move);
   // cturn : degree_t → Pose → (degree_t, Pose)
-  auto cturn = tf::curry(::turn);
+  const auto cturn = tf::curry(::turn);
 
   SECTION("… an equlateral triangular trajectory should leave the pose "
           "invairant, but should yield an expected log trace.") {

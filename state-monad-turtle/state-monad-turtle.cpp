@@ -12,20 +12,20 @@ TEST_CASE("Using the State monad, starting at the origin and turtle should…") 
   const Pose initial{0, 0, degree_t{0}};
 
   // cmove : double → Pose → (double, Pose)
-  auto cmove = tf::curry(::move);
+  const auto cmove = tf::curry(::move);
   // cturn : degree_t → Pose → (degree_t, Pose)
-  auto cturn = tf::curry(::turn);
+  const auto cturn = tf::curry(::turn);
 
   SECTION("… be Pose invariant sent on the journey of an equilateral triangle, "
           "using operator| notation.") {
 
     // clang-format off
     auto triangle = cmove(10)
-              | [&](auto) { return cturn(degree_t{120}); } 
-              | [&](auto) { return cmove(10); }
-              | [&](auto) { return cturn(degree_t{120}); }
-              | [&](auto) { return cmove(10); }
-              | [&](auto) { return cturn(degree_t{120}); };
+                  | [&](auto) { return cturn(degree_t{120}); } 
+                  | [&](auto) { return cmove(10); }
+                  | [&](auto) { return cturn(degree_t{120}); }
+                  | [&](auto) { return cmove(10); }
+                  | [&](auto) { return cturn(degree_t{120}); };
     // clang-format on
 
     // const Pose final = std::get<Pose>(eitherFinal);

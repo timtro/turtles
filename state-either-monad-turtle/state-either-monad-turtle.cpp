@@ -12,9 +12,9 @@ TEST_CASE(
   const Pose initial{0, 0, degree_t{0}};
 
   // cmove : double → Pose → (double, Pose)
-  auto cmove = tf::curry(::move);
+  const auto cmove = tf::curry(::move);
   // cturn : degree_t → Pose → (degree_t, Pose)
-  auto cturn = tf::curry(::turn);
+  const auto cturn = tf::curry(::turn);
 
   SECTION("Be Pose invariant sent on the journey of an equilateral triangle, "
           "using operator| notation.") {
