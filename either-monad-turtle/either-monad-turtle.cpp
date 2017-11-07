@@ -8,6 +8,27 @@
 
 using test_fixtures::delta;
 
+struct ComparatorWithReference {
+  const EitherErrorOr<Pose> reference;
+
+  // Case: we've visited upon a Pose type:
+  void operator()(const Pose p){
+    // Fail if we got a Pose value while expecting an error:
+    REQUIRE_FALSE(std::holds_alternative<turtleError>(reference));
+    const Pose referencePose = std::get<Pose>(reference);
+    REQUIRE(p.x == Approx(referencePose.x).margin(delta));
+    REQUIRE(p.y == Approx(referencePose.y).margin(delta));
+    REQUIRE(p.th == Approx(referencePose.th).margin(delta));
+  }
+
+  // Case: we've visited upon a turtleError type:
+  void operator()(const turtleError err){
+    // Fail if we got a turtleError value while expecting a Pose:
+    REQUIRE_FALSE(std::holds_alternative<Pose>(reference));
+    REQUIRE(err == std::get<turtleError>(reference));
+  }
+};
+
 TEST_CASE("Using the Either monad, starting at the origin and turtle should…") {
 
   const Pose initial{0, 0, degree_t{0}};
@@ -29,11 +50,7 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
                       | cturn(degree_t{120});
     // clang-format on
 
-    const Pose final = std::get<Pose>(eitherFinal);
-
-    REQUIRE(final.x == Approx(initial.x).margin(delta));
-    REQUIRE(final.y == Approx(initial.y).margin(delta));
-    REQUIRE(final.th == Approx(initial.th).margin(delta));
+    std::visit(ComparatorWithReference{initial}, eitherFinal);
   }
 
   SECTION("When a `hitWall` error is inserted into the binding chain, the "
@@ -45,15 +62,15 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
     };
 
     // clang-format off
-    auto final = move(10, initial)
-                | cturn(degree_t{120}) | hitTheWall
-                | cmove(10)
-                | cturn(degree_t{120})
-                | cmove(10)
-                | cturn(degree_t{120});
+    auto eitherFinal = move(10, initial)
+                      | cturn(degree_t{120}) | hitTheWall
+                      | cmove(10)
+                      | cturn(degree_t{120})
+                      | cmove(10)
+                      | cturn(degree_t{120});
     // clang-format on
 
-    REQUIRE(std::holds_alternative<turtleError>(final));
-    REQUIRE(std::get<turtleError>(final) == turtleError::hitWall);
+    std::visit(ComparatorWithReference{turtleError::hitWall}, eitherFinal);
+
   }
 }
