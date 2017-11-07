@@ -6,7 +6,7 @@
 enum class turtleError { hitWall, couldNotRotate };
 
 template <typename T>
-using EitherErrorOr = std::variant<T, turtleError>;
+using EitherErrorOr = Either<T, turtleError>;
 
 EitherErrorOr<Pose> move(double, const Pose &);
 EitherErrorOr<Pose> turn(degree_t, const Pose &);

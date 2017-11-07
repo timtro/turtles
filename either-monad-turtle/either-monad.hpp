@@ -7,6 +7,10 @@
 
 using trait::invoke_result_t;
 
+// Error type is fixed in the monad.
+template <typename T, typename ErrType>
+using Either = std::variant<T, ErrType>;
+
 // Monadic bind for the Either monad:
 //   mbind :: EirtherM<A> → (A → EitherM<B>) → EitherN<B>
 // where
@@ -19,7 +23,7 @@ auto mbind(EitherMA m, F f) {
   using EitherMB = invoke_result_t<F, std::variant_alternative_t<0, EitherMA>>;
   using ErrType = std::variant_alternative_t<1, EitherMA>;
   if (std::holds_alternative<ErrType>(m))
-    return EitherMB{m};
+    return static_cast<EitherMB>(m);
   else
     return std::invoke(f, std::get<0>(m));
 }
