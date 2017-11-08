@@ -7,13 +7,13 @@ constexpr bool exceptionalError{false};
 
 OOTurtle::OOTurtle(std::ostringstream &oss) : m_oss(oss) {}
 
-Pose advanced_position(Pose x0, int r) {
+Pose advanced_position(Pose x0, meter_t r) {
   auto dx = r * cos(x0.th);
   auto dy = r * sin(x0.th);
   return {x0.x + dx, x0.y + dy, x0.th};
 }
 
-void OOTurtle::move(int r) {
+void OOTurtle::move(meter_t r) {
   if (exceptionalError)
     throw MovingError();
   m_oss << "moving from " << this->m_pose;

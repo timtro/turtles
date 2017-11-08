@@ -6,13 +6,13 @@
 #include <sstream>
 
 class OOTurtle {
-  Pose m_pose{0, 0, degree_t{0}};
+  Pose m_pose{meter_t{0}, meter_t{0}, 0_deg};
   std::ostringstream &m_oss;
 
 public:
   OOTurtle() = default;
   OOTurtle(std::ostringstream &);
-  void move(int r);
+  void move(meter_t);
   void turn(degree_t);
 
   decltype(Pose::x) get_x() { return this->m_pose.x; }

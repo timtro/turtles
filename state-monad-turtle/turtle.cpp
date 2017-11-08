@@ -10,7 +10,7 @@ auto mget() {
   return [](auto s) { return std::make_pair(s, s); };
 }
 
-StateWith<double> move(double r, const Pose &p0) {
+StateWith<meter_t> move(meter_t r, const Pose &p0) {
   const auto dx = r * cos(p0.th);
   const auto dy = r * sin(p0.th);
   return {r, {p0.x + dx, p0.y + dy, p0.th}};

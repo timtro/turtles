@@ -31,7 +31,7 @@ struct ComparatorWithReference {
 
 TEST_CASE("Using the Either monad, starting at the origin and turtle should…") {
 
-  const Pose initial{0, 0, degree_t{0}};
+  const Pose initial{0_m, 0_m, 0_deg};
 
   // cmove : double → Pose → (double, Pose)
   const auto cmove = tf::curry(::move);
@@ -42,12 +42,12 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
           "triangle.") {
 
     // clang-format off
-    auto eitherFinal = move(10, initial)
-                      | cturn(degree_t{120}) 
-                      | cmove(10)
-                      | cturn(degree_t{120})
-                      | cmove(10)
-                      | cturn(degree_t{120});
+    auto eitherFinal = move(10_m, initial)
+                      | cturn(120_deg) 
+                      | cmove(10_m)
+                      | cturn(120_deg)
+                      | cmove(10_m)
+                      | cturn(120_deg);
     // clang-format on
 
     std::visit(ComparatorWithReference{initial}, eitherFinal);
@@ -62,12 +62,12 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
     };
 
     // clang-format off
-    auto eitherFinal = move(10, initial)
-                      | cturn(degree_t{120}) | hitTheWall
-                      | cmove(10)
-                      | cturn(degree_t{120})
-                      | cmove(10)
-                      | cturn(degree_t{120});
+    auto eitherFinal = move(10_m, initial)
+                      | cturn(120_deg) | hitTheWall
+                      | cmove(10_m)
+                      | cturn(120_deg)
+                      | cmove(10_m)
+                      | cturn(120_deg);
     // clang-format on
 
     std::visit(ComparatorWithReference{turtleError::hitWall}, eitherFinal);

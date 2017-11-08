@@ -31,7 +31,7 @@ struct ComparatorWithReference {
 
 TEST_CASE("Starting at the origin…") {
 
-  Pose initial{0, 0, degree_t{0}};
+  Pose initial{0_m, 0_m, 0_deg};
 
   // cmove : double → Pose → (double, Pose)
   const auto cmove = tf::curry(::move);
@@ -42,12 +42,12 @@ TEST_CASE("Starting at the origin…") {
           "invairant, but should yield an expected log trace.") {
 
     // clang-format off
-    auto writerEitherfinal = move(10, initial)
-                            | cturn(degree_t{120})
-                            | cmove(10)
-                            | cturn(degree_t{120})
-                            | cmove(10)
-                            | cturn(degree_t{120});
+    auto writerEitherfinal = move(10_m, initial)
+                            | cturn(120_deg)
+                            | cmove(10_m)
+                            | cturn(120_deg)
+                            | cmove(10_m)
+                            | cturn(120_deg);
     // clang-format on
 
     std::visit(ComparatorWithReference{initial}, writerEitherfinal.first);
@@ -59,22 +59,24 @@ TEST_CASE("Starting at the origin…") {
           "in the result variable") {
 
     const std::string manualLogWithErr{
-        "moving from [0, 0, 0 rad] to [10, 0, 0 rad]\n"
-        "turning from [10, 0, 0 rad] to [10, 0, 2.0944 rad]\n"
-        "hitWall\n"};
+      "moving from [0 m, 0 m, 0 rad] to [10 m, 0 m, 0 rad]\n"
+      "turning from [10 m, 0 m, 0 rad] to [10 m, 0 m, 2.0944 rad]\n"
+      "hitWall\n"};
 
     auto hitTheWall = [](auto) -> WriterWith<EitherErrorOr<Pose>> {
       return {turtleError::hitWall, std::string{"hitWall\n"}};
     };
 
     // clang-format off
-    auto writerEitherfinal = move(10, initial)
-                            | cturn(degree_t{120}) | hitTheWall
-                            | cmove(10)
-                            | cturn(degree_t{120})
-                            | cmove(10)
-                            | cturn(degree_t{120});
+    auto writerEitherfinal = move(10_m, initial)
+                            | cturn(120_deg) | hitTheWall
+                            | cmove(10_m)
+                            | cturn(120_deg)
+                            | cmove(10_m)
+                            | cturn(120_deg);
     // clang-format on
+
+    std::cout << writerEitherfinal.second;
 
     std::visit(ComparatorWithReference{turtleError::hitWall},
                writerEitherfinal.first);

@@ -9,7 +9,7 @@ using test_fixtures::delta;
 
 TEST_CASE("Using the State monad, starting at the origin and turtle should…") {
 
-  const Pose initial{0, 0, degree_t{0}};
+  const Pose initial{0_m, 0_m, 0_deg};
 
   // cmove : double → Pose → (double, Pose)
   const auto cmove = tf::curry(::move);
@@ -20,12 +20,12 @@ TEST_CASE("Using the State monad, starting at the origin and turtle should…") 
           "using operator| notation.") {
 
     // clang-format off
-    auto triangle = cmove(10)
-                  | [&](auto) { return cturn(degree_t{120}); } 
-                  | [&](auto) { return cmove(10); }
-                  | [&](auto) { return cturn(degree_t{120}); }
-                  | [&](auto) { return cmove(10); }
-                  | [&](auto) { return cturn(degree_t{120}); };
+    auto triangle = cmove(10_m)
+                  | [&](auto) { return cturn(120_deg); } 
+                  | [&](auto) { return cmove(10_m); }
+                  | [&](auto) { return cturn(120_deg); }
+                  | [&](auto) { return cmove(10_m); }
+                  | [&](auto) { return cturn(120_deg); };
     // clang-format on
 
     // const Pose final = std::get<Pose>(eitherFinal);
@@ -41,12 +41,12 @@ TEST_CASE("Using the State monad, starting at the origin and turtle should…") 
           "using operator>> notation.") {
 
     // clang-format off
-    auto triangle = cmove(10) 
-              >> cturn(degree_t{120})
-              >> cmove(10)
-              >> cturn(degree_t{120})
-              >> cmove(10)
-              >> cturn(degree_t{120});
+    auto triangle = cmove(10_m) 
+              >> cturn(120_deg)
+              >> cmove(10_m)
+              >> cturn(120_deg)
+              >> cmove(10_m)
+              >> cturn(120_deg);
     // clang-format on
 
     // const Pose final = std::get<Pose>(eitherFinal);
@@ -62,12 +62,12 @@ TEST_CASE("Using the State monad, starting at the origin and turtle should…") 
       "… be left apprximately invariant sent on the journey of an equilateral "
       "triangle, using \"do\" notation.") {
     // clang-format off
-    auto triangle = mdo(cmove(10),
-                        cturn(degree_t{120}),
-                        cmove(10),
-                        cturn(degree_t{120}),
-                        cmove(10),
-                        cturn(degree_t{120}));
+    auto triangle = mdo(cmove(10_m),
+                        cturn(120_deg),
+                        cmove(10_m),
+                        cturn(120_deg),
+                        cmove(10_m),
+                        cturn(120_deg));
     // clang-format on
 
     auto [a, final] = triangle(initial);

@@ -5,7 +5,7 @@ using units::math::sin;
 
 constexpr bool exceptionalError{false};
 
-std::optional<Pose> move(double r, const Pose &p0) {
+std::optional<Pose> move(meter_t r, const Pose &p0) {
   if (exceptionalError)
     return {};
   else {

@@ -11,7 +11,7 @@ using test_fixtures::manualLog;
 TEST_CASE("An equlateral triangular trajectory should leave the pose "
           "invairant, but should yield an expected log trace.") {
 
-  Pose initial{0, 0, degree_t{0}};
+  Pose initial{0_m, 0_m, 0_deg};
 
   // cmove : double → Pose → (double, Pose)
   const auto cmove = tf::curry(::move);
@@ -19,12 +19,12 @@ TEST_CASE("An equlateral triangular trajectory should leave the pose "
   const auto cturn = tf::curry(::turn);
 
   // clang-format off
-  auto final = move(10, initial)
-    | cturn(degree_t{120})
-    | cmove(10)
-    | cturn(degree_t{120})
-    | cmove(10)
-    | cturn(degree_t{120});
+  auto final = move(10_m, initial)
+    | cturn(120_deg)
+    | cmove(10_m)
+    | cturn(120_deg)
+    | cmove(10_m)
+    | cturn(120_deg);
   // clang-format on
 
   REQUIRE(final.first.x == Approx(initial.x).margin(delta));

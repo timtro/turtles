@@ -6,7 +6,7 @@ using units::math::sin;
 
 constexpr bool exceptionalError{false};
 
-WriterWith<EitherErrorOr<Pose>> move(double r, const Pose &p0) {
+WriterWith<EitherErrorOr<Pose>> move(meter_t r, const Pose &p0) {
   std::stringstream log;
   if (exceptionalError) {
     log << "hitWall\n";

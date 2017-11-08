@@ -3,7 +3,7 @@
 using units::math::cos;
 using units::math::sin;
 
-Pose move(double r, const Pose &p0) {
+Pose move(meter_t r, const Pose &p0) {
   const auto dx = r * cos(p0.th);
   const auto dy = r * sin(p0.th);
   return {p0.x + dx, p0.y + dy, p0.th};

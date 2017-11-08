@@ -20,12 +20,14 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
 
   auto initial = turtle;
 
-  turtle.move(10);
-  turtle.turn(degree_t{120});
-  turtle.move(10);
-  turtle.turn(degree_t{120});
-  turtle.move(10);
-  turtle.turn(degree_t{120});
+  turtle.move(10_m);
+  turtle.turn(120_deg);
+  turtle.move(10_m);
+  turtle.turn(120_deg);
+  turtle.move(10_m);
+  turtle.turn(120_deg);
+
+  std::cout<<log.str();
 
   // NB: Couldn't write these tests without writing getters.
   REQUIRE(turtle.get_x() == Approx(initial.get_x()).margin(delta));
@@ -44,32 +46,32 @@ TEST_CASE(
   auto initial = turtle;
 
   try {
-    turtle.move(10);
+    turtle.move(10_m);
   } catch (MovingError) {
     std::cout << "Moving error\n";
   }
   try {
-    turtle.turn(degree_t{120});
+    turtle.turn(120_deg);
   } catch (TurningError) {
     std::cout << "Moving error\n";
   }
   try {
-    turtle.move(10);
+    turtle.move(10_m);
   } catch (MovingError) {
     std::cout << "Moving error\n";
   }
   try {
-    turtle.turn(degree_t{120});
+    turtle.turn(120_deg);
   } catch (TurningError) {
     std::cout << "Moving error\n";
   }
   try {
-    turtle.move(10);
+    turtle.move(10_m);
   } catch (MovingError) {
     std::cout << "Moving error\n";
   }
   try {
-    turtle.turn(degree_t{120});
+    turtle.turn(120_deg);
   } catch (TurningError) {
     std::cout << "Moving error\n";
   }

@@ -4,7 +4,7 @@
 using units::math::cos;
 using units::math::sin;
 
-Writer<Pose> move(double r, const Pose &p0) {
+Writer<Pose> move(meter_t r, const Pose &p0) {
   std::stringstream log;
   const auto dx = r * cos(p0.th);
   const auto dy = r * sin(p0.th);

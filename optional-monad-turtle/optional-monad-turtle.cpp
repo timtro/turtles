@@ -10,7 +10,7 @@ using test_fixtures::delta;
 TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
           "optional monad and >>= style binding.") {
 
-  Pose initial{0, 0, degree_t{0}};
+  Pose initial{0_m, 0_m, 0_deg};
 
   // cmove : double → Pose → (double, Pose)
   const auto cmove = tf::curry(::move);
@@ -18,12 +18,12 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
   const auto cturn = tf::curry(::turn);
 
   // clang-format off
-  auto final = move(10, initial)
-              | cturn(degree_t{120}) 
-              | cmove(10)
-              | cturn(degree_t{120})
-              | cmove(10)
-              | cturn(degree_t{120});
+  auto final = move(10_m, initial)
+              | cturn(120_deg) 
+              | cmove(10_m)
+              | cturn(120_deg)
+              | cmove(10_m)
+              | cturn(120_deg);
   // clang-format on
 
   REQUIRE(final->x == Approx(initial.x).margin(delta));
@@ -34,7 +34,7 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
 TEST_CASE("Inserting a null unit in the binding chain should short circuit the "
           "rest of the computation, leaving an empty optional result") {
 
-  Pose initial{0, 0, degree_t{0}};
+  Pose initial{0_m, 0_m, 0_deg};
 
   // cmove : double → Pose → (double, Pose)
   const auto cmove = tf::curry(::move);
@@ -44,12 +44,12 @@ TEST_CASE("Inserting a null unit in the binding chain should short circuit the "
   auto kill = [](auto) -> std::optional<Pose> { return {}; };
 
   // clang-format off
-  auto final = move(10, initial)
-              | cturn(degree_t{120}) | kill 
-              | cmove(10)
-              | cturn(degree_t{120})
-              | cmove(10)
-              | cturn(degree_t{120});
+  auto final = move(10_m, initial)
+              | cturn(120_deg) | kill 
+              | cmove(10_m)
+              | cturn(120_deg)
+              | cmove(10_m)
+              | cturn(120_deg);
   // clang-format on
 
   REQUIRE(final.has_value() == false);

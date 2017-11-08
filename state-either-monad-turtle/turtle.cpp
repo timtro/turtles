@@ -5,7 +5,7 @@ using units::math::sin;
 
 constexpr bool exceptionalError{false};
 
-StateWith<EitherErrorOr<double>> move(double r, const Pose &p0) {
+StateWith<EitherErrorOr<meter_t>> move(meter_t r, const Pose &p0) {
   if (exceptionalError)
     return {turtleError::hitWall, p0};
   else {

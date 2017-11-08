@@ -3,22 +3,20 @@
 #include <sstream>
 #include <units.h>
 
-#define DISABLE_PREDEFINED_UNITS
-#define ENABLE_ANGLE_UNITS
+using namespace units::literals;
 using units::angle::degree_t;
+using units::length::meter_t;struct Pose;
 
-struct Pose;
-
-Pose move(double, const Pose &);
+Pose move(meter_t, const Pose &);
 Pose turn(degree_t, const Pose &);
 
 // We could simply inherit from the Pose from ../include/Pose.hpp, but it
 // creates a little more complexity than I'd like in a example.
 struct Pose {
-  const double x{0}, y{0};
+  const meter_t x{0}, y{0};
   const degree_t th{0};
 
   // These enable the dot().continuation().style().of().pipes().
-  Pose move(double r) { return ::move(r, *this); }
+  Pose move(meter_t r) { return ::move(r, *this); }
   Pose turn(degree_t dth) { return ::turn(dth, *this); }
 };
