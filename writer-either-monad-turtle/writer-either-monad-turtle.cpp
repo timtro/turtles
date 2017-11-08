@@ -76,8 +76,6 @@ TEST_CASE("Starting at the origin…") {
                             | cturn(120_deg);
     // clang-format on
 
-    std::cout << writerEitherfinal.second;
-
     std::visit(ComparatorWithReference{turtleError::hitWall},
                writerEitherfinal.first);
     REQUIRE(writerEitherfinal.second == std::string{manualLogWithErr});

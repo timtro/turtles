@@ -27,8 +27,6 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
   turtle.move(10_m);
   turtle.turn(120_deg);
 
-  std::cout<<log.str();
-
   // NB: Couldn't write these tests without writing getters.
   REQUIRE(turtle.get_x() == Approx(initial.get_x()).margin(delta));
   REQUIRE(turtle.get_y() == Approx(initial.get_y()).margin(delta));
