@@ -2,7 +2,7 @@
 //
 #pragma once
 
-#include "../include/Pose.hpp"
+#include "Pose.hpp"
 #include <sstream>
 
 class OOTurtle {
