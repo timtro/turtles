@@ -49,6 +49,7 @@
     "variant": "cpp",
     "*.ipp": "cpp",
     "__functional_base": "cpp",
-    "__memory": "cpp"
+    "__memory": "cpp",
+    "numeric": "cpp"
   }
 }

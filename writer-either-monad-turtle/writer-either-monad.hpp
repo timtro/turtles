@@ -43,3 +43,8 @@ template <typename EitherM, typename F>
 auto operator|(EitherM &&m, F &&f) {
   return mbind(std::forward<EitherM>(m), std::forward<F>(f));
 }
+
+template <typename A, typename ErrType>
+auto mreturn(A a) {
+  return std::make_pair(Either<A, ErrType>{a}, std::string());
+}
