@@ -7,9 +7,7 @@ using namespace units::literals;
 using units::angle::degree_t;
 using units::length::meter_t;
 
-// In the global version in ../include/Pose.hpp, the fields of Pose are const,
-// and the Pose in an immutable data structure. In the OO version that isn't
-// possible.
+// Mutable version of pose, where fields aren't const.
 struct Pose {
   meter_t x{0}, y{0};
   degree_t th{0};
