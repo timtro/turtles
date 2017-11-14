@@ -11,7 +11,7 @@ constexpr bool exceptionalError{false};
 // Same as writer-either-monad
 M<Pose> move(meter_t r, const Pose &p0) {
   std::stringstream log;
-  if (r > 100_m) {
+  if (r > 100_m) { // Enables us to provoke an error in the unit test.
     log << "hitWall\n";
     return {turtleError::hitWall, log.str()};
   } else {
@@ -48,5 +48,6 @@ M<Pose> run(M<Pose> mp0, TurtleCommand cmd) {
 }
 
 M<Pose> run_all(Pose p0, const std::vector<TurtleCommand> &cmds) {
-  return std::accumulate(cbegin(cmds), cend(cmds), Mreturn(p0), run);
+  return std::accumulate(cbegin(cmds), cend(cmds), make_writer_with_either(p0),
+                         run);
 }

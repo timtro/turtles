@@ -16,7 +16,7 @@ template <typename T>
 using M = WriterWith<EitherErrorOr<T>>;
 
 template <typename A>
-auto Mreturn(A a) {
+auto make_writer_with_either(A a) {
   return mreturn<A, turtleError>(a);
 }
 
