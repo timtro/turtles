@@ -1,5 +1,6 @@
+get_filename_component(target ${CMAKE_CURRENT_LIST_DIR} NAME)
 
-add_executable(oo-turtle oo-turtle.cpp OOTurtle.cpp)
-target_link_libraries(oo-turtle CATCH)
+add_executable(${target} ${target}.cpp OOTurtle.cpp)
+target_link_libraries(${target} CATCH)
 
-add_test(NAME oo-turtle COMMAND oo-turtle)
+add_test(NAME ${target} COMMAND ${target})

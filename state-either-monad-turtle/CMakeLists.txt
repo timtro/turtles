@@ -1,5 +1,6 @@
+get_filename_component(target ${CMAKE_CURRENT_LIST_DIR} NAME)
 
-add_executable(state-either-monad-turtle state-either-monad-turtle.cpp turtle.cpp)
-target_link_libraries(state-either-monad-turtle CATCH)
+add_executable(${target} ${target}.cpp turtle.cpp)
+target_link_libraries(${target} CATCH)
 
-add_test(NAME state-either-monad-turtle COMMAND state-either-monad-turtle)
+add_test(NAME ${target} COMMAND ${target})

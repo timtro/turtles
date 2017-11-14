@@ -1,4 +1,6 @@
-add_executable(command-turtle command-turtle.cpp turtle.cpp)
-target_link_libraries(command-turtle CATCH)
+get_filename_component(target ${CMAKE_CURRENT_LIST_DIR} NAME)
 
-add_test(NAME command-turtle COMMAND command-turtle)
+add_executable(${target} ${target}.cpp turtle.cpp)
+target_link_libraries(${target} CATCH)
+
+add_test(NAME ${target} COMMAND ${target})
