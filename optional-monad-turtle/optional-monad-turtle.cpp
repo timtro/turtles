@@ -7,50 +7,51 @@
 
 using test_fixtures::delta;
 
-TEST_CASE("Equilateral triangle movement should leave invariant Pose, using "
-          "optional monad and >>= style binding.") {
+TEST_CASE("Starting from some initial position…") {
 
   Pose initial{0_m, 0_m, 0_deg};
 
-  // cmove : double → Pose → (double, Pose)
+  // cmove : meter_t → Pose → std::optional<Pose>
   const auto cmove = tf::curry(::move);
-  // cturn : degree_t → Pose → (degree_t, Pose)
+  // cturn : degree_t → Pose → std::optional<Pose>
   const auto cturn = tf::curry(::turn);
 
-  // clang-format off
-  auto final = move(10_m, initial)
-              | cturn(120_deg) 
-              | cmove(10_m)
-              | cturn(120_deg)
-              | cmove(10_m)
-              | cturn(120_deg);
-  // clang-format on
+  SECTION("… a pose should be roughly invariant when mapped around a closed "
+          "contour. This section uses composition of curried functions which "
+          "return optional values, and composition is done with >>= style "
+          "binding. The full pipe chain is successful.") {
 
-  REQUIRE(final->x == Approx(initial.x).margin(delta));
-  REQUIRE(final->y == Approx(initial.y).margin(delta));
-  REQUIRE(final->th == Approx(initial.th).margin(delta));
-}
+    // clang-format off
+    auto final = move(10_m, initial)
+                | cturn(120_deg)
+                | cmove(10_m)
+                | cturn(120_deg)
+                | cmove(10_m)
+                | cturn(120_deg);
+    // clang-format on
 
-TEST_CASE("Inserting a null unit in the binding chain should short circuit the "
-          "rest of the computation, leaving an empty optional result") {
+    REQUIRE(final->x == Approx(initial.x).margin(delta));
+    REQUIRE(final->y == Approx(initial.y).margin(delta));
+    REQUIRE(final->th == Approx(initial.th).margin(delta));
+  }
 
-  Pose initial{0_m, 0_m, 0_deg};
+  SECTION("… a failure is injected into the composition of commands, "
+          "deonstrating that a sentinal value will be forwarded through the "
+          "piped (>>=) composition.") {
 
-  // cmove : double → Pose → (double, Pose)
-  const auto cmove = tf::curry(::move);
-  // cturn : degree_t → Pose → (degree_t, Pose)
-  const auto cturn = tf::curry(::turn);
+    Pose initial{0_m, 0_m, 0_deg};
 
-  auto kill = [](auto) -> std::optional<Pose> { return {}; };
+    auto inject_sentinal = [](auto) -> std::optional<Pose> { return {}; };
 
-  // clang-format off
-  auto final = move(10_m, initial)
-              | cturn(120_deg) | kill 
-              | cmove(10_m)
-              | cturn(120_deg)
-              | cmove(10_m)
-              | cturn(120_deg);
-  // clang-format on
+    // clang-format off
+    auto final = move(10_m, initial)
+                | cturn(120_deg) | inject_sentinal
+                | cmove(10_m)
+                | cturn(120_deg)
+                | cmove(10_m)
+                | cturn(120_deg);
+    // clang-format on
 
-  REQUIRE(final.has_value() == false);
+    REQUIRE(final.has_value() == false);
+  }
 }

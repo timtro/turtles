@@ -15,19 +15,19 @@ public:
   void move(meter_t);
   void turn(degree_t);
 
-  decltype(Pose::x) get_x() { return this->m_pose.x; }
-  decltype(Pose::y) get_y() { return this->m_pose.y; }
-  decltype(Pose::th) get_th() { return this->m_pose.th; }
+  decltype(Pose::x) get_x() const { return this->m_pose.x; }
+  decltype(Pose::y) get_y() const { return this->m_pose.y; }
+  decltype(Pose::th) get_th() const { return this->m_pose.th; }
 };
 
 class MovingError : public std::exception {
   const char *what() const noexcept override {
-    return "An exceptional event occured while moving";
+    return "An exceptional event occurred while moving";
   }
 };
 
 class TurningError : public std::exception {
   const char *what() const noexcept override {
-    return "An exceptional event occured while turning";
+    return "An exceptional event occurred while turning";
   }
 };

@@ -8,15 +8,14 @@
 
 using test_fixtures::delta;
 
-TEST_CASE("Equilateral triangle movement should leave invariant Pose, using…") {
-  // cmove : double → Pose → (double, Pose)
-  const auto cmove = tf::curry(::move);
-  // cturn : degree_t → Pose → (degree_t, Pose)
-  const auto cturn = tf::curry(::turn);
+TEST_CASE("Starting from some initial position…") {
 
-  Pose initial{0_m, 0_m, 0_deg};
+  const Pose initial{0_m, 0_m, 0_deg};
 
-  SECTION("… the crude function interface") {
+  SECTION("… a pose should be roughly invariant when mapped around a closed "
+          "contour. Here we use the crude function interface with intermediate "
+          "variables") {
+
     const auto s1 = move(10_m, initial);
     const auto s2 = turn(120_deg, s1);
     const auto s3 = move(10_m, s2);
@@ -29,7 +28,8 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using…")
     REQUIRE(final.th == Approx(initial.th).margin(delta));
   }
 
-  SECTION("… crude function interface with nesting") {
+  SECTION("… a pose should be roughly invariant when mapped around a closed "
+          "contour. Here we use the crude function interface with nesting") {
     // clang-format off
     const auto final = turn(120_deg,
                           move(10_m,
@@ -44,7 +44,9 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using…")
     REQUIRE(final.th == Approx(initial.th).margin(delta));
   }
 
-  SECTION("… dot-style piping. (requires turtle methods in Pose)") {
+  SECTION("… a pose should be roughly invariant when mapped around a closed "
+          "contour. Here we use dot-style piping. (requires turtle methods in "
+          "Pose)") {
 
     const auto final = move(10_m, initial)
                            .turn(120_deg)
@@ -58,7 +60,13 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using…")
     REQUIRE(final.th == Approx(initial.th).margin(delta));
   }
 
-  SECTION("… approximately point-free style") {
+  // cmove : meter_t → Pose → Pose
+  const auto cmove = tf::curry(::move);
+  // cturn : degree_t → Pose → Pose
+  const auto cturn = tf::curry(::turn);
+
+  SECTION("… a pose should be roughly invariant when mapped around a closed "
+          "contour. Here we use an approximately point-free style") {
 
     // clang-format off
     const auto triangle = tf::compose(cmove(10_m),
@@ -76,7 +84,9 @@ TEST_CASE("Equilateral triangle movement should leave invariant Pose, using…")
     REQUIRE(final.th == Approx(initial.th).margin(delta));
   }
 
-  SECTION("… curried functions and the pipe function template.") {
+  SECTION("… a pose should be roughly invariant when mapped around a closed "
+          "contour. Here we use curried functions and the pipe function "
+          "template.") {
 
     // clang-format off
     const auto final = tf::pipe(initial,
