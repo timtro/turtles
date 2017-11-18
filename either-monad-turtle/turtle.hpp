@@ -6,7 +6,7 @@
 enum class turtleError { hitWall, couldNotRotate };
 
 template <typename T>
-using ErrorOr = Either<T, turtleError>;
+using ErrorOr = MonadError<turtleError, T>;
 
 ErrorOr<Pose> move(meter_t, const Pose &);
 ErrorOr<Pose> turn(degree_t, const Pose &);
