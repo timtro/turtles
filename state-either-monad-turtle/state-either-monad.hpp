@@ -8,24 +8,24 @@ using trait::invoke_result_t;
 
 template <typename StateMA, typename F>
 auto mbind(StateMA ma, F f) {
-  // ma :: StateMonad<A> = State → StateWith<EitherErrorOr<A>>,
-  //  f :: F = A → StateMonad<B> - A → State → StateWith<EitherErrorOr<B>>.
+  // ma :: StateMonad<A> = State → StateWith<ErrorOr<A>>,
+  //  f :: F = A → StateMonad<B> - A → State → StateWith<ErrorOr<B>>.
   return [=](auto state) {
 
     auto maResult = std::invoke(ma, state);
     // Deduce output types:
-    using StateWithEitherErrorOrB =
+    using StateWithErrorOrB =
         invoke_result_t<invoke_result_t<F, decltype(maResult.first)>,
                         decltype(maResult.second)>;
     using ErrType = typename std::variant_alternative_t<
-        1, decltype(StateWithEitherErrorOrB::first)>;
+        1, decltype(StateWithErrorOrB::first)>;
 
     if (std::holds_alternative<ErrType>(maResult.first)) {
       // Since both paths out of this function have to return the same type, we
-      // have to convert StateWith<EitherErrorOr<A> into
-      // StateWith<EitherErrorOr<B>, even though we are certain that it's an
+      // have to convert StateWith<ErrorOr<A> into
+      // StateWith<ErrorOr<B>, even though we are certain that it's an
       // ErrType, and not an A or a B. Otherwise, we could return maResult.
-      StateWithEitherErrorOrB b =
+      StateWithErrorOrB b =
           std::make_pair(std::get<ErrType>(maResult.first), maResult.second);
       return b;
     } else
@@ -43,12 +43,12 @@ template <class StateMA, class StateMB>
 auto mthen(StateMA ma, StateMB mb) {
   return [=](auto state) {
     auto maResult = std::invoke(ma, state);
-    using StateWithEitherErrorOrB =
+    using StateWithErrorOrB =
         invoke_result_t<StateMB, decltype(maResult.second)>;
     using ErrType = typename std::variant_alternative_t<
-        1, decltype(StateWithEitherErrorOrB::first)>;
+        1, decltype(StateWithErrorOrB::first)>;
     if (std::holds_alternative<ErrType>(maResult.first)) {
-      StateWithEitherErrorOrB b =
+      StateWithErrorOrB b =
           std::make_pair(std::get<ErrType>(maResult.first), maResult.second);
       return b;
     } else

@@ -10,7 +10,7 @@ using test_fixtures::manualLog;
 using test_fixtures::manualLogWithErr;
 
 struct ComparatorWithReference {
-  const EitherErrorOr<Pose> reference;
+  const ErrorOr<Pose> reference;
 
   // Case: we've visited upon a Pose type:
   void operator()(const Pose p) {

@@ -82,7 +82,7 @@ TEST_CASE(
           "remaining calls should be short circuited, and the error code left "
           "in the result variable") {
 
-    auto hitTheWall = [](auto s) -> StateWith<EitherErrorOr<Pose>> {
+    auto hitTheWall = [](auto s) -> StateWith<ErrorOr<Pose>> {
       return {turtleError::hitWall, s};
     };
 

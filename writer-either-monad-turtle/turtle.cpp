@@ -6,7 +6,7 @@ using units::math::sin;
 
 constexpr bool exceptionalError{false};
 
-WriterWith<EitherErrorOr<Pose>> move(meter_t r, const Pose &p0) {
+WriterWith<ErrorOr<Pose>> move(meter_t r, const Pose &p0) {
   std::stringstream log;
   if (exceptionalError) {
     log << "hitWall\n";
@@ -20,7 +20,7 @@ WriterWith<EitherErrorOr<Pose>> move(meter_t r, const Pose &p0) {
   }
 }
 
-WriterWith<EitherErrorOr<Pose>> turn(degree_t dth, const Pose &p0) {
+WriterWith<ErrorOr<Pose>> turn(degree_t dth, const Pose &p0) {
   std::stringstream log;
   if (exceptionalError) {
     log << "couldNotRotate\n";

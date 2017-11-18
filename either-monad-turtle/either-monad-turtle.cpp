@@ -9,7 +9,7 @@
 using test_fixtures::delta;
 
 struct ComparatorWithReference {
-  const EitherErrorOr<Pose> reference;
+  const ErrorOr<Pose> reference;
 
   // Case: we've visited upon a Pose type:
   void operator()(const Pose p) {
@@ -57,7 +57,7 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
           "remaining calls should be short circuited, and the error code left "
           "in the result variable") {
 
-    auto hitTheWall = [](auto) -> EitherErrorOr<Pose> {
+    auto hitTheWall = [](auto) -> ErrorOr<Pose> {
       return turtleError::hitWall;
     };
 

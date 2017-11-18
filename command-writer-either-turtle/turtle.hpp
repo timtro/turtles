@@ -10,10 +10,10 @@
 enum class turtleError { hitWall, couldNotRotate };
 
 template <typename T>
-using EitherErrorOr = Either<T, turtleError>;
+using ErrorOr = Either<T, turtleError>;
 
 template <typename T>
-using M = WriterWith<EitherErrorOr<T>>;
+using M = WriterWith<ErrorOr<T>>;
 
 template <typename A>
 auto make_writer_with_either(A a) {
