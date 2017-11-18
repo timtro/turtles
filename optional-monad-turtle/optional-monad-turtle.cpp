@@ -7,7 +7,11 @@
 
 using test_fixtures::delta;
 
-TEST_CASE("Starting from some initial position…") {
+TEST_CASE("This series uses composition of curried functions which return "
+          "optional values. Composition is done with >>= style binding which "
+          "unpacks the optional value and passes it to the next function, or "
+          "fast-forwards to the end of the composition if a sentinal is return "
+          "at any point in the chain. Starting from some initial position…") {
 
   Pose initial{0_m, 0_m, 0_deg};
 
@@ -17,9 +21,7 @@ TEST_CASE("Starting from some initial position…") {
   const auto cturn = tf::curry(::turn);
 
   SECTION("… a pose should be roughly invariant when mapped around a closed "
-          "contour. This section uses composition of curried functions which "
-          "return optional values, and composition is done with >>= style "
-          "binding. The full pipe chain is successful.") {
+          "contour. The full pipe chain is successful.") {
 
     // clang-format off
     auto final = move(10_m, initial)
@@ -30,22 +32,23 @@ TEST_CASE("Starting from some initial position…") {
                 | cturn(120_deg);
     // clang-format on
 
+    REQUIRE(final.has_value() == true);
     REQUIRE(final->x == Approx(initial.x).margin(delta));
     REQUIRE(final->y == Approx(initial.y).margin(delta));
     REQUIRE(final->th == Approx(initial.th).margin(delta));
   }
 
-  SECTION("… a failure is injected into the composition of commands, "
-          "deonstrating that a sentinal value will be forwarded through the "
-          "piped (>>=) composition.") {
+  SECTION("… two motion commands are executed before a failure is injected "
+          "into the composition demonstrating that a sentinal value will be "
+          "forwarded through the piped (>>=) composition.") {
 
     Pose initial{0_m, 0_m, 0_deg};
 
-    auto inject_sentinal = [](auto) -> std::optional<Pose> { return {}; };
+    auto throw_error = [](auto) -> std::optional<Pose> { return {}; };
 
     // clang-format off
     auto final = move(10_m, initial)
-                | cturn(120_deg) | inject_sentinal
+                | cturn(120_deg) | throw_error
                 | cmove(10_m)
                 | cturn(120_deg)
                 | cmove(10_m)
