@@ -9,7 +9,7 @@
 All examples will require:
 
  * Cmake for building.
- * Phil Nash's unit testing library: [Catch](https://github.com/philsquared/Catch)
+ * Phil Nash's unit testing library: [Catch2](https://github.com/philsquared/Catch)
  * Compile time dimensional units library: [units](https://github.com/nholthaus/units)
 
 Individual examples may have additional dependencies, to be found in their respective READEMEs.
@@ -31,7 +31,7 @@ Programming in this way has many consequences to software quality and engineerin
 
 For the engineer using C++ and looking for that balance, there is something of a poverty of resources. There is currently one introductory book in press[^FPCPP], and a smattering of academic papers [...]. There is one major peer reviewed library that is now out of date [^Boost.Phoenix], and several informal libraries under open source licenses. Yet features from functional languages continue to diffuse into the modern C++ standard. Perhaps the most notable example is the introduction of *lambda functions* from Church's lambda calculus, which is basis for the syntax of all functional languages. The code in this repository makes heavy use of new additions to the standard library such as tuples and variants, which enable algebraic construction of data structures.
 
-In the present exploration, we investigate the ability of the upcoming C++ language standard to express functional programming algebras in a clear and usable manner. Familiarity with C++11 is assumed along with some level of mathematical acumen. However, key concepts in functional programming will be introduced as needed.
+## Overview
 
 The remaining sections of this document introduce some concepts that are used generally among the code examples in this repository. Each example has its own subdirectory that contains a `README.md` that details the theory and discusses the concepts showcased therein.
 
@@ -48,7 +48,23 @@ This repository should be consumed in the following order:
 
 ## The algebra of programs
 
-Representable data types are viewed through type algebra as sets where each type is the set of values 
+The spirit of algebra is the structure of composition and transformation. Superficially, we might look for structure on three levels:
+
+  * Withing a given type. For example, can addition and scalar multiplication be defined on pairs of integers so as to make them a vector space?
+
+  * Between types where operations are parameterised over types and produce new types. In C++ this is achieved through template metaprogramming.
+
+  * Between procedures, which can be composed if the argument and return types align.
+
+The distinction between these structures is naive, as they can all be unified in the theory of categories. However, when writing C++ code, these three areas of concern have palpably different qualities. Our focus will be the theoretical and practical unification of the latter two.
+
+Types are viewed as sets where elements are the representable values in each type. For example, the set $\mathtt{bool}$ has a cardinality of two: $\left|\,\{\mathtt{true}, \mathtt{false}\}\,\right| = 2$, and $\left|\, \mathtt{int32}\,\right| = 2^{32}$, and so on. Operations on types produce new types. In order to formalise these operations into an algebraic structure, we will need a set of all types: $\mathbf{\mathtt{Type}}$. There are two operations on types, $+$ and $\times$, which form a commutative ring over $\mathbf{\mathtt{Type}}$.
+
+### Product types and the Cartesian product
+
+### Sum types and the tagged union
+
+### Exponentiation, relational types and currying.
 
 
 [^FPCPP]: Ivan Čukić (2018) Functional Programming in C++. Manning Publications. ISBN 9781617293818 <https://www.manning.com/books/functional-programming-in-cplusplus>
