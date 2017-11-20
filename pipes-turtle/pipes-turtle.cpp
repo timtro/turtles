@@ -13,6 +13,22 @@ TEST_CASE("Starting from some initial position…") {
   const Pose initial{0_m, 0_m, 0_deg};
 
   SECTION("… a pose should be roughly invariant when mapped around a closed "
+          "contour. Here we use dot-style piping. (requires turtle methods in "
+          "Pose)") {
+
+    const auto final = initial.move(10_m)
+                           .turn(120_deg)
+                           .move(10_m)
+                           .turn(120_deg)
+                           .move(10_m)
+                           .turn(120_deg);
+
+    REQUIRE(final.x == Approx(initial.x).margin(delta));
+    REQUIRE(final.y == Approx(initial.y).margin(delta));
+    REQUIRE(final.th == Approx(initial.th).margin(delta));
+  }
+
+  SECTION("… a pose should be roughly invariant when mapped around a closed "
           "contour. Here we use the crude function interface with intermediate "
           "variables") {
 
@@ -39,22 +55,6 @@ TEST_CASE("Starting from some initial position…") {
                           move(10_m,
                           initial  ))))));
     // clang-format on
-    REQUIRE(final.x == Approx(initial.x).margin(delta));
-    REQUIRE(final.y == Approx(initial.y).margin(delta));
-    REQUIRE(final.th == Approx(initial.th).margin(delta));
-  }
-
-  SECTION("… a pose should be roughly invariant when mapped around a closed "
-          "contour. Here we use dot-style piping. (requires turtle methods in "
-          "Pose)") {
-
-    const auto final = move(10_m, initial)
-                           .turn(120_deg)
-                           .move(10_m)
-                           .turn(120_deg)
-                           .move(10_m)
-                           .turn(120_deg);
-
     REQUIRE(final.x == Approx(initial.x).margin(delta));
     REQUIRE(final.y == Approx(initial.y).margin(delta));
     REQUIRE(final.th == Approx(initial.th).margin(delta));

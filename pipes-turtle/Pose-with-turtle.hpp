@@ -5,7 +5,8 @@
 
 using namespace units::literals;
 using units::angle::degree_t;
-using units::length::meter_t;struct Pose;
+using units::length::meter_t;
+struct Pose;
 
 Pose move(meter_t, const Pose &);
 Pose turn(degree_t, const Pose &);
@@ -17,6 +18,6 @@ struct Pose {
   const degree_t th{0};
 
   // These enable the dot().continuation().style().of().pipes().
-  Pose move(meter_t r) { return ::move(r, *this); }
-  Pose turn(degree_t dth) { return ::turn(dth, *this); }
+  Pose move(meter_t r) const { return ::move(r, *this); }
+  Pose turn(degree_t dth) const { return ::turn(dth, *this); }
 };
