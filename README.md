@@ -1,35 +1,78 @@
 # `Functional Ascent of Turtles`
 ---
 
-***Abstract:** Inspired by [CrossWing's](http://www.crosswing.com/) turtle command interface for [virtualME](http://www.crosswing.com/virtualme.html) and by Scott Wlaschin's talk *[Thirteen Ways of looking at a Turtle](https://fsharpforfunandprofit.com/turtle/)*, we explore a series of approaches to implementing a basic move/turn command interface using functional programming techniques in C++*
+***Abstract:** Inspired by [CrossWing's](http://www.crosswing.com/) turtle command interface for [virtualME](http://www.crosswing.com/virtualme.html) and by Scott Wlaschin's talk *[Thirteen Ways of looking at a Turtle](https://fsharpforfunandprofit.com/turtle/)*, this series explores the various approaches to implementing a basic move/turn control/command interface using functional programming techniques in C++*
 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+<!-- code_chunk_output -->
 
-## Dependencies
+* [`Functional Ascent of Turtles`](#functional-ascent-of-turtles)
+	* [Introduction](#introduction)
+		* [The turtle problem](#the-turtle-problem)
+	* [Overview](#overview)
+		* [1. oo-turtle](#1-oo-turtle)
+		* [2. pipes-turtle](#2-pipes-turtle)
+		* [3. optional-monad-turtle](#3-optional-monad-turtle)
+		* [4. either-monad-turtle](#4-either-monad-turtle)
+		* [5. writer-monad-turtle](#5-writer-monad-turtle)
+			* [5.1 writer-class-turtle](#51-writer-class-turtle)
+		* [6. writer-either-monad-turtle](#6-writer-either-monad-turtle)
+		* [7. command-turtle](#7-command-turtle)
+		* [8. command-writer-either-turtle](#8-command-writer-either-turtle)
+		* [9. promise-monad-turtle](#9-promise-monad-turtle)
+		* [10. actor-promise-turtle](#10-actor-promise-turtle)
+	* [Theoretical background: the algebra of programs](#theoretical-background-the-algebra-of-programs)
+		* [Product types and the Cartesian product](#product-types-and-the-cartesian-product)
+		* [Sum types and the tagged union](#sum-types-and-the-tagged-union)
+		* [A quick example of type algebraic construction](#a-quick-example-of-type-algebraic-construction)
+		* [Exponentiation, function types and currying.](#exponentiation-function-types-and-currying)
+	* [The Tutrtle problem](#the-tutrtle-problem)
+	* [Dependencies](#dependencies)
+		* [Compiler and STL requirements](#compiler-and-stl-requirements)
+	* [Building:](#building)
+		* [Groundwork: Common code for all cases](#groundwork-common-code-for-all-cases)
 
-All examples will require:
+<!-- /code_chunk_output -->
 
- * Cmake for building.
- * Phil Nash's unit testing library: [Catch2](https://github.com/philsquared/Catch)
- * Compile time dimensional units library: [units](https://github.com/nholthaus/units)
-
-Individual examples may have additional dependencies, to be found in their respective READEMEs.
-
-
-### Compiler and STL requirements
-
-  * Currently I'm compiling with Clang++-6.0 trunk and libc++-6.0
-  * `-std=c++17`
-  * `std::variant` and support functions, including `std::variant_alternative_t` (which seems to be broken in GCC 7.0.1).
-  * `std::optional` and friends.
-
-
-## Introduction:
+## Introduction
 
 Functional programming, simply put, is programming constrained by mathematical relationships. Procedures and data are both treated algebraically and on an equal footing—procedures can be assigned to variables, passed as arguments and returned from other procedures. Complexity is built by structured and lawful composition and the emergent behaviour can be understood by equational reasoning. Mathematical expressions called denotations can describe the meanings of expressions in the programming language. Programs can be derived mathematically and implemented in a way maintains much of the mathematical structure.
 
-Programming in this way has many consequences to software quality and engineering design. However, this style of programming is most often exercised in higher level languages that explicitly support this mathematical style. At this time, there seems to be very little literature exploring the use of functional programming in languages positioned closer to the hardware like C++. C++ is used ubiquitously in demanding systems applications and it is precisely those applications which have the most to gain from the structure and clarity that functional programming can offer. However, there are consequences in performance that must be considered, and when a language doesn't have direct support for functional programming. Functional code can be *herder* to understand because the syntax obscures the meaning of the code. So there is a balance that needs to be struck, rather than a wholesale exchange of imperative style for functional style.
+Programming in this way has many consequences to software quality and engineering design. However, this style of programming is most often exercised in higher level languages that explicitly support this mathematical style. That may explain the deficit of literature exploring the use of functional programming in languages positioned closer to the hardware like C++. C++ is used ubiquitously in demanding systems applications and it is precisely those applications which have the most to gain from the structure and clarity that functional programming can offer. However, there are consequences in performance that must be considered. Moreover, when a language doesn't have direct support for functional programming, functional code can be *herder* to understand because the hostile syntax obscures the codified mathematical meaning. So there is a balance that needs to be struck, rather than a wholesale exchange of imperative style for functional style.
 
-For the engineer using C++ and looking for that balance, there is something of a poverty of resources. There is currently one introductory book in press[^FPCPP], and a smattering of academic papers [...]. There is one major peer reviewed library that is now out of date [^Boost.Phoenix], and several informal libraries under open source licenses. Yet features from functional languages continue to diffuse into the modern C++ standard. Perhaps the most notable example is the introduction of *lambda functions* from Church's lambda calculus, which is basis for the syntax of all functional languages. The code in this repository makes heavy use of new additions to the standard library such as tuples and variants, which enable algebraic construction of data structures.
+For the engineer using C++ and looking for that balance, there is a poverty of resources. There is currently one introductory book in press[^FPCPP], and a smattering of academic papers [...]. There is one major peer reviewed support library that is now out of date [^Boost.Phoenix], and several informal libraries under open source licenses. Still, features from functional languages continue to diffuse into the modern C++ standard. Perhaps the most notable example is the introduction of *lambda functions* from Church's lambda calculus, which is basis for the syntax of all functional languages. The code in this repository makes heavy use of new additions to the standard library such as tuples and variants, which enable algebraic construction of data structures.
+
+The passages and code in this repository are a documented exercise in functional programming in C++. In it, I have explored some of the various trade-offs in striving for functional purity in an inherently impure language. The end result of this exercise will inform my design of a general research framework for Nonlinear Model Predictive Controllers. You may notice some of that bias in the coming passages.
+
+
+### The turtle problem
+
+I believe CrossWing and Wlaschin both take their inspiration from [Turtle graphics](https://en.wikipedia.org/wiki/Turtle_graphics), of which Wikipedia offers a very straightforward explanation:
+> In computer graphics, turtle graphics are vector graphics using a relative cursor (the "turtle") upon a Cartesian plane. Turtle graphics is a key feature of the Logo programming language.[1]
+> …
+> The turtle has three attributes: a location, an orientation (or direction), and a pen. The pen, too, has attributes: color, width, and on/off state.
+>
+> The turtle moves with commands that are relative to its own position, such as "move forward 10 spaces" and "turn left 90 degrees". The pen carried by the turtle can also be controlled, by enabling it, setting its color, or setting its width. A student could understand (and predict and reason about) the turtle's motion by imagining what they would do if they were the turtle. Seymour Papert called this "body syntonic" reasoning.
+>
+> A full turtle graphics system requires control flow, procedures, and recursion: many turtle drawing programs fall short. From these building blocks one can build more complex shapes like squares, triangles, circles and other composite figures. The idea of turtle graphics, for example is useful in a Lindenmayer system for generating fractals.
+>
+> Turtle geometry is also sometimes used in graphics environments as an alternative to a strictly coordinate-addressed graphics system.
+
+Since the turtle interface in this project is inspired by a robotic interface, I've no need for the pen-related state and have elided those from the treatment herein. Instead, the *Pose* of the robot is represented as a simple structure:
+```cpp
+struct Pose {
+  const meter_t x{0}, y{0};
+  const degree_t th{0};
+
+  // …
+};
+```
+Here, the definition can be found in `./include/Pose.hpp`. A version without the `const` fields is in `./include/nonconst-Pose.hpp`. The `meter_t` and `degree_t` types are from Nic Holthaus' [units](https://github.com/nholthaus/units) library which allows compile-time checking and implicit conversion of units. No repeats of the [Mars Climate Orbiter](https://en.wikipedia.org/wiki/Mars_Climate_Orbiter) mishap, please.
+
+Since we are not implementing pen state, the only transformations on a Pose based on the turtle interface are `move` and `turn` which will move or turn relative to an input Pose, producing a transformed Pose.
+
+I think this is an excellent demonstration of modern functional programming because it demonstrates the ability of FP to maintain the purity of Papert's *body syntonic reasoning* while simultaneously handling peripheral concerns like logging, error handling, asynchronous computation and external events, which would otherwise frustrate such simple reasoning.
+
 
 ## Overview
 
@@ -46,7 +89,66 @@ This repository should be consumed in the following order:
   1. command-turtle/README.md
   1. command-writer-either-turtle/README.md
 
-## The algebra of programs
+### 1. oo-turtle
+
+To start off from familiar ground, we begin with a straightforward Object-Oriented (OO) implementation of the turtle problem that any OO programmer would feel comfortable reading or writing. The state is stored privately in an object behind an interface which implements the turtle commands. Logging is handled through a ostream object which is injected through te turtles constructor. Errors are handled with exceptions.
+
+
+### 2. pipes-turtle
+
+When we exchange mutable state for functional style, we must explicitly pass the turtle state into the turtle commands. Since the turtle interface should take a previous state as input and return a new state as output, this passing of state takes the form of function composition. In this repository we explore C++ notations that can be used for such composition. In doing so, we temporarily ignore logging and error handling.
+
+
+### 3. optional-monad-turtle
+
+The optional monad offers composition over functions for handing optional values. An optional (AKA a *maybe* type) is represented in the type algebra as $() + T$ for some type $T$. (Not sure? Type theory is introduced [later](#theoretical-background-the-algebra-of-programs) in the README) In C++ it is implemented as the `std::optional` type constructor and represents a container for a value that may or may not be empty.
+
+In this example, the output values of the turtle functions are optional to represent a computation that might fail. This is a partial replacement for exceptions. The structure of a monad is used to hide the complexity of unwrapping optional values to pass to the next function in the composition.
+
+
+### 4. either-monad-turtle
+
+While the optional-monad gives us purchase on computations that might fail, it doesn't offer a wealth of information about the nature of the failure. All we know is that at some point in the binding composition, there was a failure. The either-monad (AKA the error-monad) exchanges the empty type in the optional for an arbitrary error type. In this example, we create an `enum class` for named errors.
+
+As with the optional monad, we make composition automatic through a monadic binding operation. The visitor pattern is used to handle the variant return type. (More on variant types in [this section](#sum-types-and-the-tagged-union))
+
+### 5. writer-monad-turtle
+
+In this example, we use the writer monad to pass a log around between turtle calls, returning the logging behaviour we relinquished after the oo-turtle example. The return values of the turtle functions is embellished with a string: `std::pair<std::string, Pose>` and the monad structure is used to hide the complexity as it was in the optional- and either-monad examples.
+
+In general, the writer monad allows us to tacitly carry a monoid around with our return value. The monoid is fixed in the monad. For example, if we have a Writer which carries an integer, it can't be composed with a writer that carries a String: those are two different monads.
+
+#### 5.1 writer-class-turtle
+
+Instead of using `std::pair` for the Writer, this example offers a small variation where a struct template is used for the monad values. The struct has `value` and `log` fields. The idea is to advantage the client by not requiring them to remember if the log is the first or second item in the `std::pair`.
+
+
+### 6. writer-either-monad-turtle
+
+In general there is no straightforward technique for composing monads. Among the most thorough theoretical treatments comes from Jones and Duponcheel[^Jones1993] where they narrow the problem down to the impossibility of deriving a `join` operation automatically for arbitrary compositions of monads. 
+
+In this example, I demonstrate the manual composition of the either- and writer- monads so that we can fully regain the functionality of the oo-turtle, in mathematically pure way.
+
+[^Jones1993]: Jones, M. P., & Duponcheel, L. (1993). Composing monads. Technical Report YALEU/DCS/RR-1004, Department of Computer Science. Yale University.
+
+
+### 7. command-turtle
+
+In the case of virtualME, the state is stored in the actual physical position of the robot and it is not the job of any client of the turtle interface to keep track of it. But if a command is not a transformation on a Pose, then what is it? It's plain old data, of course. And if you think about it, why should it be anything else? A command is not that which executes an instruction, but is the instruction itself.
+
+In this example, 
+
+### 8. command-writer-either-turtle
+
+### 9. promise-monad-turtle
+
+Yet to come.
+
+### 10. actor-promise-turtle
+
+Yet to come.
+
+## Theoretical background: the algebra of programs
 
 The spirit of algebra is the structure of composition and transformation. Superficially, we might look for structure on three levels:
 
@@ -169,3 +271,49 @@ auto add5 = [](int b){ return 5 + b; };
 [^Boost.Phoenix]: Boost.Phoenix: https://theboostcpplibraries.com/boost.phoenix
 
 [^Udemy]: https://www.udemy.com/functional-programming-using-cpp/
+
+## The Tutrtle problem
+
+## Dependencies
+
+All examples will require:
+
+ * Cmake for building.
+ * Phil Nash's unit testing library: [Catch2](https://github.com/philsquared/Catch)
+ * Compile time dimensional units library: [units](https://github.com/nholthaus/units)
+
+Individual examples may have additional dependencies, to be found in their respective READEMEs.
+
+
+### Compiler and STL requirements
+
+  * Currently I'm compiling with Clang++-6.0 trunk and libc++-6.0
+  * `-std=c++17`
+  * `std::variant` and support functions, including `std::variant_alternative_t` (which seems to be broken in GCC 7.0.1).
+  * `std::optional` and friends.
+
+## Building:
+```sh
+# from project root:
+mkdir build && cd build
+cmake .. && make
+# To run all examples:
+make test
+```
+
+### Groundwork: Common code for all cases
+
+
+```cpp
+struct Pose {
+  const meter_t x{0}, y{0};
+  const degree_t th{0};
+
+  friend std::ostream &operator<<(std::ostream &os, const Pose &p) {
+    os << '[' << p.x << ", " << p.y << ", " << p.th << ']';
+    return os;
+  }
+};
+```
+
+*[OO]: Object-Oriented
