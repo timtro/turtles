@@ -1,5 +1,6 @@
+get_filename_component(target ${CMAKE_CURRENT_LIST_DIR} NAME)
 
-add_executable(pipes-turtle pipes-turtle.cpp Pose-with-turtle.cpp)
-target_link_libraries(pipes-turtle CATCH)
+add_executable(${target} ${target}.cpp turtle.cpp)
+target_link_libraries(${target} CATCH)
 
-add_test(NAME pipes-turtle COMMAND pipes-turtle)
+add_test(NAME ${target} COMMAND ${target})

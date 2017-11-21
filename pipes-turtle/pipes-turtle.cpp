@@ -1,22 +1,21 @@
 #include "../include/test_fixtures.hpp"
 #include "../include/tfunc/function-operations.hpp"
 
-// Not using ../include/Pose.hpp because we need
-#include "Pose-with-turtle.hpp"
+#include "turtle.hpp"
 
 #include <catch/catch.hpp>
 
 using test_fixtures::delta;
 
-TEST_CASE("Starting from some initial position…") {
+TEST_CASE("Starting from some initial position, a pose should be roughly "
+          "invariant when mapped around a closed contour. Using …") {
 
   const Pose initial{0_m, 0_m, 0_deg};
 
-  SECTION("… a pose should be roughly invariant when mapped around a closed "
-          "contour. Here we use dot-style piping. (requires turtle methods in "
-          "Pose)") {
-
-    const auto final = initial.move(10_m)
+  SECTION("… dot-style piping.") {
+    // .move and .turn are both methods of TPose, so we cast:
+    const auto final = static_cast<const TPose &>(initial)
+                           .move(10_m)
                            .turn(120_deg)
                            .move(10_m)
                            .turn(120_deg)
@@ -28,9 +27,7 @@ TEST_CASE("Starting from some initial position…") {
     REQUIRE(final.th == Approx(initial.th).margin(delta));
   }
 
-  SECTION("… a pose should be roughly invariant when mapped around a closed "
-          "contour. Here we use the crude function interface with intermediate "
-          "variables") {
+  SECTION("… the crude function interface with intermediate variables") {
 
     const auto s1 = move(10_m, initial);
     const auto s2 = turn(120_deg, s1);
@@ -44,8 +41,7 @@ TEST_CASE("Starting from some initial position…") {
     REQUIRE(final.th == Approx(initial.th).margin(delta));
   }
 
-  SECTION("… a pose should be roughly invariant when mapped around a closed "
-          "contour. Here we use the crude function interface with nesting") {
+  SECTION("… the crude function interface with nesting") {
     // clang-format off
     const auto final = turn(120_deg,
                           move(10_m,
@@ -65,8 +61,7 @@ TEST_CASE("Starting from some initial position…") {
   // cturn : degree_t → Pose → Pose
   const auto cturn = tf::curry(::turn);
 
-  SECTION("… a pose should be roughly invariant when mapped around a closed "
-          "contour. Here we use an approximately point-free style") {
+  SECTION("… curried functions and approximately point-free style") {
 
     // clang-format off
     const auto triangle = tf::compose(cmove(10_m),
@@ -84,9 +79,7 @@ TEST_CASE("Starting from some initial position…") {
     REQUIRE(final.th == Approx(initial.th).margin(delta));
   }
 
-  SECTION("… a pose should be roughly invariant when mapped around a closed "
-          "contour. Here we use curried functions and the pipe function "
-          "template.") {
+  SECTION("… curried functions and the pipe function template.") {
 
     // clang-format off
     const auto final = tf::pipe(initial,

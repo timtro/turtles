@@ -7,31 +7,33 @@ If we begin by making the fields of the `Pose` class immutable, then there is no
 struct Pose {
   const meter_t x{0}, y{0};
   const degree_t th{0};
+}
 ```
-And the `move` and `turn` methods can be marked const as well:
-```cpp
-  Pose move(meter_t r) const { return ::move(r, *this); }
-  Pose turn(degree_t dth) const { return ::turn(dth, *this); }
-};
-```
-Above, the implementation of `move` and `turn` are exported to free functions in the root namespace. The reason for this will be apparent in the next example.
 
-Overall cons:
-  * No logging.
-  * No error handling.
+Above, the implementation of `move` and `turn` are exported to free functions. The reason for this will be apparent in the next example.
 
-#### The dot-style piping
+For now, we won't worry about logging or exceptions. We introduce those gradually in later examples.
+
+In the OO turtle, issuing commands was a matter of calling methods on the object holding the pose. Now, with no mutable state, we have to concern ourselves with propagating the state from one turtle command to the next. Because the turtle methods in our Pose class return new Pose objects, we can simply use the function call operator (`.`) as a means of tacitly passing the state to the next turtle command:
+
 ```cpp
-    const auto final = initial.move(10_m)
+    const auto final = static_cast<const TPose &>(initial)
+                           .move(10_m)
                            .turn(120_deg)
                            .move(10_m)
                            .turn(120_deg)
                            .move(10_m)
                            .turn(120_deg);
 ```
+Here, `initial.move(10_m)` returns a new `Pose` object, allowing us in turn to call `.turn(120_deg)`. The new Pose created by `initial.move(10_m)` is implicitly passed as a pointer to the `turn` method call and this cycle can be extended indefinitely.
+
+Pros:
+  * Looks even simpler than than the OO version if you ignore the cast. (And the cast may not be necessary if you don't plan to mix TPose and Pose in the same code.)
+  * Immutable data.
+  * Pure functions.
+
 Cons:
-  * Requires turtle commands to be part of the `Pose` data type.
-  * Requires 
+  * Casting the TPose interface onto Pose is a bit ugly.
 
 #### The crude function interface
 ```cpp
@@ -93,3 +95,7 @@ const auto final = tf::pipe(initial,
                           cmove(10_m),
                           cturn(120_deg));
 ```
+
+[^Martin2002]: Martin, Robert (2002). Agile Software Development: Principles, Patterns and Practices. Pearson Education.
+
+[^Meyer1988]: Meyer, Bertrand (1988). Object-Oriented Software Construction. Prentice Hall. ISBN 0-13-629049-3.
