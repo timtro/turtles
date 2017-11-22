@@ -21,6 +21,7 @@
 		* [8. command-writer-either-turtle](#8-command-writer-either-turtle)
 		* [9. promise-monad-turtle](#9-promise-monad-turtle)
 		* [10. actor-promise-turtle](#10-actor-promise-turtle)
+		* [11. frp-turtle](#11-frp-turtle)
 	* [Theoretical background: the algebra of programs](#theoretical-background-the-algebra-of-programs)
 		* [Product types and the Cartesian product](#product-types-and-the-cartesian-product)
 		* [Sum types and the tagged union](#sum-types-and-the-tagged-union)
@@ -89,6 +90,7 @@ This repository should be consumed in the following order:
   1. command-turtle/README.md
   1. command-writer-either-turtle/README.md
 
+
 ### 1. oo-turtle
 
 To start off from familiar ground, we begin with a straightforward Object-Oriented (OO) implementation of the turtle problem that any OO programmer would feel comfortable reading or writing. The state is stored privately in an object behind an interface which implements the turtle commands. Logging is handled through a ostream object which is injected through te turtles constructor. Errors are handled with exceptions.
@@ -112,11 +114,13 @@ While the optional-monad gives us purchase on computations that might fail, it d
 
 As with the optional monad, we make composition automatic through a monadic binding operation. The visitor pattern is used to handle the variant return type. (More on variant types in [this section](#sum-types-and-the-tagged-union))
 
+
 ### 5. writer-monad-turtle
 
 In this example, we use the writer monad to pass a log around between turtle calls, returning the logging behaviour we relinquished after the oo-turtle example. The return values of the turtle functions is embellished with a string: `std::pair<std::string, Pose>` and the monad structure is used to hide the complexity as it was in the optional- and either-monad examples.
 
 In general, the writer monad allows us to tacitly carry a monoid around with our return value. The monoid is fixed in the monad. For example, if we have a Writer which carries an integer, it can't be composed with a writer that carries a String: those are two different monads.
+
 
 #### 5.1 writer-class-turtle
 
@@ -136,17 +140,30 @@ In this example, I demonstrate the manual composition of the either- and writer-
 
 In the case of virtualME, the state is stored in the actual physical position of the robot and it is not the job of any client of the turtle interface to keep track of it. But if a command is not a transformation on a Pose, then what is it? It's plain old data, of course. And if you think about it, why should it be anything else? A command is not that which executes an instruction, but is the instruction itself.
 
-In this example, 
+In this example, two data structures are defined: `TurtleMove` and `TurtleTurn` containing the distance to move or the angle to turn respectively. A `TurtleCommand` is then variant type that is either one or the other. A function called `run` replaces both the `move` and `turn` functions: `run : (Pose, TurtleCommand) → Pose`, while a command `run_all` will execute a vector of turtle commands: `run_all : (Pose, [TurtleCommand]) → Pose`.
+
+The client code still passes in the state: this is only a step toward exporting the responsibility of state management. But taking this step cost us logging and error handling, yet again. It will be restored in the next example.
+
 
 ### 8. command-writer-either-turtle
+
+The next step toward exporting the responsibility of state management is regaining the logging and error handling. This is a matter of bringing back the writer- and either-monads. Those monads are now used within the executor code, and the client code need not deal with them. From the point of view of the client, they get back the final `Pose` and a string log OR an error code and a string log.
+
 
 ### 9. promise-monad-turtle
 
 Yet to come.
 
+
 ### 10. actor-promise-turtle
 
 Yet to come.
+
+
+### 11. frp-turtle
+
+Yet to come.
+
 
 ## Theoretical background: the algebra of programs
 

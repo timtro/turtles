@@ -5,6 +5,7 @@
 using units::math::cos;
 using units::math::sin;
 
+// run : (Pose, TurtleCommand) → Pose
 Pose run(Pose p0, TurtleCommand cmd) {
 
   // Alternative which uses plain ISO C++ instead of overload:
@@ -36,6 +37,7 @@ Pose run(Pose p0, TurtleCommand cmd) {
   return std::visit(handler, cmd);
 }
 
-Pose run_all(Pose p0, const std::vector<TurtleCommand> &cmds) {
+// run_all : (Pose, [TurtleCommand]) → Pose
+run_all(Pose p0, const std::vector<TurtleCommand> &cmds) {
   return std::accumulate(cbegin(cmds), cend(cmds), p0, run);
 }
