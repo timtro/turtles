@@ -52,7 +52,7 @@ The next test is identical except that motion commands are placed in try/catch b
 ```
 
 ## Advantages
-  * Familliar
+  * Familiar
   * Easy to implement
   * Easy to understand
 
