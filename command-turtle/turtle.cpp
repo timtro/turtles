@@ -38,6 +38,6 @@ Pose run(Pose p0, TurtleCommand cmd) {
 }
 
 // run_all : (Pose, [TurtleCommand]) → Pose
-run_all(Pose p0, const std::vector<TurtleCommand> &cmds) {
+Pose run_all(Pose p0, const std::vector<TurtleCommand> &cmds) {
   return std::accumulate(cbegin(cmds), cend(cmds), p0, run);
 }
