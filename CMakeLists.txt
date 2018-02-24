@@ -1,5 +1,6 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 2.9)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_C_COMPILER /usr/bin/clang-7)
 set(CMAKE_CXX_COMPILER /usr/bin/clang++-7)
 # set(CMAKE_C_COMPILER /usr/bin/gcc-7)
@@ -59,3 +60,10 @@ add_subdirectory(state-either-monad-turtle)
 add_subdirectory(command-turtle)
 add_subdirectory(command-writer-either-turtle)
 add_subdirectory(writer-class-turtle)
+
+IF( EXISTS "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json" )
+  EXECUTE_PROCESS( COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json
+    ${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json
+  )
+ENDIF()
