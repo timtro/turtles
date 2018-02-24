@@ -5,8 +5,6 @@
 #include <functional>
 #include <variant>
 
-using trait::invoke_result_t;
-
 // Error type is fixed in the monad:
 // class Monad m => MonadError e m | m -> e where
 template <typename ErrType, typename T>
@@ -16,7 +14,7 @@ using MonadError = std::variant<ErrType, T>;
 template <typename ErrOrA, typename F>
 auto mbind(ErrOrA m, F f) {
   using ErrType = std::variant_alternative_t<0, ErrOrA>;
-  using ErrOrB = invoke_result_t<F, std::variant_alternative_t<1, ErrOrA>>;
+  using ErrOrB = std::invoke_result_t<F, std::variant_alternative_t<1, ErrOrA>>;
   if (std::holds_alternative<ErrType>(m))
     return static_cast<ErrOrB>(m);
   else

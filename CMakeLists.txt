@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 2.8)
 
-set(CMAKE_C_COMPILER /usr/bin/clang-6.0)
-set(CMAKE_CXX_COMPILER /usr/bin/clang++-6.0)
+set(CMAKE_C_COMPILER /usr/bin/clang-7)
+set(CMAKE_CXX_COMPILER /usr/bin/clang++-7)
 # set(CMAKE_C_COMPILER /usr/bin/gcc-7)
 # set(CMAKE_CXX_COMPILER /usr/bin/g++-7)
 # set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
