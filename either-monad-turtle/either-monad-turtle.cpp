@@ -43,7 +43,7 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
 
     // clang-format off
     auto eitherFinal = move(10_m, initial)
-                      | cturn(120_deg) 
+                      | cturn(120_deg)
                       | cmove(10_m)
                       | cturn(120_deg)
                       | cmove(10_m)
