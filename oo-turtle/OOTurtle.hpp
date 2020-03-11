@@ -11,7 +11,6 @@ class OOTurtle {
   std::ostringstream &m_oss;
 
  public:
-  OOTurtle() = default;
   OOTurtle(std::ostringstream &);
   void move(meter_t);
   void turn(degree_t);

@@ -2,6 +2,7 @@
 
 #include <numeric>
 #include <variant>
+#include <vector>
 
 #include "../include/nonconst-Pose.hpp"
 
