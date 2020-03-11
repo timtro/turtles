@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../include/tfunc/function_traits.hpp"
-
 #include <functional>
 #include <string>
 #include <tuple>
 #include <variant>
+
+#include "../tfunc/include/function_traits.hpp"
 
 using trait::invoke_result_t;
 

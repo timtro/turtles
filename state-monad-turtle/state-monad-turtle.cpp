@@ -1,14 +1,15 @@
-#include "../include/test_fixtures.hpp"
-#include "../include/tfunc/function-operations.hpp"
 #include "turtle.hpp"
 
-#include <catch/catch.hpp>
 #include <iostream>
+
+#include <catch2/catch.hpp>
+
+#include "../include/test_fixtures.hpp"
+#include "../tfunc/include/function-operations.hpp"
 
 using test_fixtures::delta;
 
 TEST_CASE("Using the State monad, starting at the origin and turtle should…") {
-
   const Pose initial{0_m, 0_m, 0_deg};
 
   // cmove : double → Pose → (double, Pose)
@@ -16,12 +17,12 @@ TEST_CASE("Using the State monad, starting at the origin and turtle should…") 
   // cturn : degree_t → Pose → (degree_t, Pose)
   const auto cturn = tf::curry(::turn);
 
-  SECTION("… be Pose invariant sent on the journey of an equilateral triangle, "
-          "using operator| notation.") {
-
+  SECTION(
+      "… be Pose invariant sent on the journey of an equilateral triangle, "
+      "using operator| notation.") {
     // clang-format off
     auto triangle = cmove(10_m)
-                  | [&](auto) { return cturn(120_deg); } 
+                  | [&](auto) { return cturn(120_deg); }
                   | [&](auto) { return cmove(10_m); }
                   | [&](auto) { return cturn(120_deg); }
                   | [&](auto) { return cmove(10_m); }
@@ -37,11 +38,11 @@ TEST_CASE("Using the State monad, starting at the origin and turtle should…") 
     REQUIRE(final.th == Approx(initial.th).margin(delta));
   }
 
-  SECTION("… be Pose invariant sent on the journey of an equilateral triangle, "
-          "using operator>> notation.") {
-
+  SECTION(
+      "… be Pose invariant sent on the journey of an equilateral triangle, "
+      "using operator>> notation.") {
     // clang-format off
-    auto triangle = cmove(10_m) 
+    auto triangle = cmove(10_m)
               >> cturn(120_deg)
               >> cmove(10_m)
               >> cturn(120_deg)

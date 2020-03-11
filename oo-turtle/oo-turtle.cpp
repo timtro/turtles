@@ -2,21 +2,23 @@
 // object holds turtle state, and the client interacts with the turtle through
 // the interface.
 
-#include "../include/test_fixtures.hpp"
 #include "OOTurtle.hpp"
 
-#include <catch/catch.hpp>
 #include <iostream>
 #include <sstream>
+
+#include <catch2/catch.hpp>
+
+#include "../include/test_fixtures.hpp"
 
 using test_fixtures::delta;
 using test_fixtures::manualLog;
 
-TEST_CASE("A turtle object's state should be roughly invariant when mapped "
-          "around a closed contour, and the log should contain an expected "
-          "string. Exceptions are not caught.") {
-
-  std::ostringstream log; // Log written into a stringstream.
+TEST_CASE(
+    "A turtle object's state should be roughly invariant when mapped "
+    "around a closed contour, and the log should contain an expected "
+    "string. Exceptions are not caught.") {
+  std::ostringstream log;  // Log written into a stringstream.
   OOTurtle turtle(log);
 
   auto initial = turtle;
@@ -35,11 +37,11 @@ TEST_CASE("A turtle object's state should be roughly invariant when mapped "
   REQUIRE(log.str() == manualLog);
 }
 
-TEST_CASE("A turtle object's state should be roughly invariant when mapped "
-          "around a closed contour, and the log should contain an expected "
-          "string. Exceptions are caught.") {
-
-  std::ostringstream log; // Log written into a stringstream.
+TEST_CASE(
+    "A turtle object's state should be roughly invariant when mapped "
+    "around a closed contour, and the log should contain an expected "
+    "string. Exceptions are caught.") {
+  std::ostringstream log;  // Log written into a stringstream.
   OOTurtle turtle(log);
 
   auto initial = turtle;

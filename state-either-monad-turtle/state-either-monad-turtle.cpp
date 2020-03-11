@@ -1,14 +1,14 @@
-#include "../include/test_fixtures.hpp"
-#include "../include/tfunc/function-operations.hpp"
 #include "turtle.hpp"
 
-#include <catch/catch.hpp>
+#include <catch2/catch.hpp>
+
+#include "../include/test_fixtures.hpp"
+#include "../tfunc/include/function-operations.hpp"
 
 using test_fixtures::delta;
 
 TEST_CASE(
     "Using the State+Either monad, starting at the origin and turtle should…") {
-
   const Pose initial{0_m, 0_m, 0_deg};
 
   // cmove : double → Pose → (double, Pose)
@@ -16,12 +16,12 @@ TEST_CASE(
   // cturn : degree_t → Pose → (degree_t, Pose)
   const auto cturn = tf::curry(::turn);
 
-  SECTION("Be Pose invariant sent on the journey of an equilateral triangle, "
-          "using operator| notation.") {
-
+  SECTION(
+      "Be Pose invariant sent on the journey of an equilateral triangle, "
+      "using operator| notation.") {
     // clang-format off
     auto triangle = cmove(10_m)
-                  | [&](auto) { return cturn(120_deg); } 
+                  | [&](auto) { return cturn(120_deg); }
                   | [&](auto) { return cmove(10_m); }
                   | [&](auto) { return cturn(120_deg); }
                   | [&](auto) { return cmove(10_m); }
@@ -37,11 +37,11 @@ TEST_CASE(
     REQUIRE(final.th == Approx(initial.th).margin(delta));
   }
 
-  SECTION("Be Pose invariant sent on the journey of an equilateral triangle, "
-          "using operator>> notation.") {
-
+  SECTION(
+      "Be Pose invariant sent on the journey of an equilateral triangle, "
+      "using operator>> notation.") {
     // clang-format off
-    auto triangle = cmove(10_m) 
+    auto triangle = cmove(10_m)
                   >> cturn(120_deg)
                   >> cmove(10_m)
                   >> cturn(120_deg)
@@ -61,7 +61,6 @@ TEST_CASE(
   SECTION(
       "Be left apprximately invariant sent on the journey of an equilateral "
       "triangle, using \"do\" notation.") {
-
     // clang-format off
     auto triangle = mdo(cmove(10_m),
                         cturn(120_deg),
@@ -78,18 +77,18 @@ TEST_CASE(
     REQUIRE(final.th == Approx(initial.th).margin(delta));
   }
 
-  SECTION("When a `hitWall` error is inserted into the binding chain, the "
-          "remaining calls should be short circuited, and the error code left "
-          "in the result variable") {
-
+  SECTION(
+      "When a `hitWall` error is inserted into the binding chain, the "
+      "remaining calls should be short circuited, and the error code left "
+      "in the result variable") {
     auto hitTheWall = [](auto s) -> StateWith<ErrorOr<Pose>> {
       return {turtleError::hitWall, s};
     };
 
     // clang-format off
-    auto triangle = cmove(10_m) 
+    auto triangle = cmove(10_m)
                   >> cturn(120_deg) >> hitTheWall
-                  >> cmove(10_m)               
+                  >> cmove(10_m)
                   >> cturn(120_deg)
                   >> cmove(10_m)
                   >> cturn(120_deg);

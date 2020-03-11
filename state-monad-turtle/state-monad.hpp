@@ -1,6 +1,7 @@
-#include "../include/Pose.hpp"
 #include <functional>
 #include <tuple>
+
+#include "../include/Pose.hpp"
 
 // Functions supporting the State-Monad for the Turtle application.
 //

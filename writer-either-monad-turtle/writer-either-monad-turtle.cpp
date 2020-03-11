@@ -1,9 +1,11 @@
-#include "../include/test_fixtures.hpp"
-#include "../include/tfunc/function-operations.hpp"
 #include "turtle.hpp"
 
-#include <catch/catch.hpp>
 #include <iostream>
+
+#include <catch2/catch.hpp>
+
+#include "../include/test_fixtures.hpp"
+#include "../tfunc/include/function-operations.hpp"
 
 using test_fixtures::delta;
 using test_fixtures::manualLog;
@@ -31,7 +33,6 @@ struct ComparatorWithReference {
 };
 
 TEST_CASE("Starting at the origin…") {
-
   Pose initial{0_m, 0_m, 0_deg};
 
   // cmove : double → Pose → (double, Pose)
@@ -39,9 +40,9 @@ TEST_CASE("Starting at the origin…") {
   // cturn : degree_t → Pose → (degree_t, Pose)
   const auto cturn = tf::curry(::turn);
 
-  SECTION("… an equlateral triangular trajectory should leave the pose "
-          "invairant, but should yield an expected log trace.") {
-
+  SECTION(
+      "… an equlateral triangular trajectory should leave the pose "
+      "invairant, but should yield an expected log trace.") {
     // clang-format off
     auto [final, log] = move(10_m, initial)
                       | cturn(120_deg)
@@ -55,10 +56,10 @@ TEST_CASE("Starting at the origin…") {
     REQUIRE(log == manualLog);
   }
 
-  SECTION("… when a `hitWall` error is inserted into the binding chain, the "
-          "remaining calls should be short circuited, and the error code left "
-          "in the result variable") {
-
+  SECTION(
+      "… when a `hitWall` error is inserted into the binding chain, the "
+      "remaining calls should be short circuited, and the error code left "
+      "in the result variable") {
     auto hitTheWall = [](auto) -> WriterWith<ErrorOr<Pose>> {
       return {turtleError::hitWall, std::string{"hitWall\n"}};
     };

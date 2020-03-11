@@ -1,16 +1,18 @@
-#include "../include/test_fixtures.hpp"
-#include "../include/tfunc/function-operations.hpp"
 #include "turtle.hpp"
 
-#include <catch/catch.hpp>
 #include <iostream>
+
+#include <catch2/catch.hpp>
+
+#include "../include/test_fixtures.hpp"
+#include "../tfunc/include/function-operations.hpp"
 
 using test_fixtures::delta;
 using test_fixtures::manualLog;
 
-TEST_CASE("An equlateral triangular trajectory should leave the pose "
-          "invairant, but should yield an expected log trace.") {
-
+TEST_CASE(
+    "An equlateral triangular trajectory should leave the pose "
+    "invairant, but should yield an expected log trace.") {
   Pose initial{0_m, 0_m, 0_deg};
 
   // cmove : double → Pose → (double, Pose)

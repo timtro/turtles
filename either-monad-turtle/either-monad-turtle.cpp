@@ -1,10 +1,11 @@
-#include "../include/test_fixtures.hpp"
-#include "../include/tfunc/function-operations.hpp"
 #include "turtle.hpp"
 
-#include <catch/catch.hpp>
-
 #include <iostream>
+
+#include <catch2/catch.hpp>
+
+#include "../include/test_fixtures.hpp"
+#include "../tfunc/include/function-operations.hpp"
 
 using test_fixtures::delta;
 
@@ -30,7 +31,6 @@ struct ComparatorWithReference {
 };
 
 TEST_CASE("Using the Either monad, starting at the origin and turtle should…") {
-
   const Pose initial{0_m, 0_m, 0_deg};
 
   // cmove : double → Pose → (double, Pose)
@@ -38,9 +38,9 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
   // cturn : degree_t → Pose → (degree_t, Pose)
   const auto cturn = tf::curry(::turn);
 
-  SECTION("Be left apprximately invariant sent on the journy of an equilateral "
-          "triangle.") {
-
+  SECTION(
+      "Be left apprximately invariant sent on the journy of an equilateral "
+      "triangle.") {
     // clang-format off
     auto eitherFinal = move(10_m, initial)
                       | cturn(120_deg)
@@ -53,10 +53,10 @@ TEST_CASE("Using the Either monad, starting at the origin and turtle should…")
     std::visit(ComparatorWithReference{initial}, eitherFinal);
   }
 
-  SECTION("When a `hitWall` error is inserted into the binding chain, the "
-          "remaining calls should be short circuited, and the error code left "
-          "in the result variable") {
-
+  SECTION(
+      "When a `hitWall` error is inserted into the binding chain, the "
+      "remaining calls should be short circuited, and the error code left "
+      "in the result variable") {
     auto hitTheWall = [](auto) -> ErrorOr<Pose> {
       return turtleError::hitWall;
     };

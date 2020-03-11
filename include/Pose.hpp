@@ -1,7 +1,8 @@
 #pragma once
 
-#include <sstream>
 #include <units.h>
+
+#include <sstream>
 
 using namespace units::literals;
 using units::angle::degree_t;

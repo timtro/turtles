@@ -1,10 +1,9 @@
 #pragma once
 
-#include "../include/nonconst-Pose.hpp"
-#include "../include/tfunc/overload.hpp"
-
 #include <numeric>
 #include <variant>
+
+#include "../include/nonconst-Pose.hpp"
 
 struct TurtleMove {
   const meter_t distance;

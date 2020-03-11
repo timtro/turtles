@@ -1,9 +1,11 @@
-#include "../include/test_fixtures.hpp"
 #include "turtle.hpp"
 
-#include <catch/catch.hpp>
 #include <iostream>
 #include <vector>
+
+#include <catch2/catch.hpp>
+
+#include "../include/test_fixtures.hpp"
 
 using test_fixtures::delta;
 using test_fixtures::manualLog;
@@ -31,11 +33,11 @@ struct ComparatorWithReference {
 };
 
 TEST_CASE("Starting from some initial position…") {
-
   const Pose initial{0_m, 0_m, 0_deg};
 
-  SECTION("pose should be roughly invariant when mapped around a closed "
-          "contour such as an equilateral triangle.") {
+  SECTION(
+      "pose should be roughly invariant when mapped around a closed "
+      "contour such as an equilateral triangle.") {
     std::vector<TurtleCommand> triangle{TurtleMove{10_m}, TurtleTurn{120_deg},
                                         TurtleMove{10_m}, TurtleTurn{120_deg},
                                         TurtleMove{10_m}, TurtleTurn{120_deg}};
@@ -45,8 +47,9 @@ TEST_CASE("Starting from some initial position…") {
     REQUIRE(log == manualLog);
   }
 
-  SECTION("pose should be roughly invariant when mapped around a closed "
-          "contour such as an equilateral triangle.") {
+  SECTION(
+      "pose should be roughly invariant when mapped around a closed "
+      "contour such as an equilateral triangle.") {
     std::vector<TurtleCommand> triangle{
         TurtleMove{10_m}, TurtleTurn{120_deg}, TurtleMove{1000_m},
         //                                     WHOOPS!    ^^^^

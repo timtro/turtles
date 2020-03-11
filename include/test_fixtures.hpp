@@ -22,4 +22,4 @@ namespace test_fixtures {
       "turning from [10 m, 0 m, 0 rad] to [10 m, 0 m, 2.0944 rad]\n"
       "hitWall\n"};
 
-} // namespace test_fixtures
+}  // namespace test_fixtures

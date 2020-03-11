@@ -1,8 +1,8 @@
-#include "../include/tfunc/function_traits.hpp"
-
 #include <functional>
 #include <tuple>
 #include <variant>
+
+#include "../tfunc/include/function_traits.hpp"
 
 using trait::invoke_result_t;
 
@@ -11,14 +11,14 @@ auto mbind(StateMA ma, F f) {
   // ma :: StateMonad<A> = State → StateWith<ErrorOr<A>>,
   //  f :: F = A → StateMonad<B> - A → State → StateWith<ErrorOr<B>>.
   return [=](auto state) {
-
     auto maResult = std::invoke(ma, state);
     // Deduce output types:
     using StateWithErrorOrB =
         invoke_result_t<invoke_result_t<F, decltype(maResult.first)>,
                         decltype(maResult.second)>;
-    using ErrType = typename std::variant_alternative_t<
-        1, decltype(StateWithErrorOrB::first)>;
+    using ErrType =
+        typename std::variant_alternative_t<1,
+                                            decltype(StateWithErrorOrB::first)>;
 
     if (std::holds_alternative<ErrType>(maResult.first)) {
       // Since both paths out of this function have to return the same type, we
@@ -45,8 +45,9 @@ auto mthen(StateMA ma, StateMB mb) {
     auto maResult = std::invoke(ma, state);
     using StateWithErrorOrB =
         invoke_result_t<StateMB, decltype(maResult.second)>;
-    using ErrType = typename std::variant_alternative_t<
-        1, decltype(StateWithErrorOrB::first)>;
+    using ErrType =
+        typename std::variant_alternative_t<1,
+                                            decltype(StateWithErrorOrB::first)>;
     if (std::holds_alternative<ErrType>(maResult.first)) {
       StateWithErrorOrB b =
           std::make_pair(std::get<ErrType>(maResult.first), maResult.second);

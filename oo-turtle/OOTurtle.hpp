@@ -2,14 +2,15 @@
 //
 #pragma once
 
-#include "../include/nonconst-Pose.hpp"
 #include <sstream>
+
+#include "../include/nonconst-Pose.hpp"
 
 class OOTurtle {
   Pose m_pose{meter_t{0}, meter_t{0}, 0_deg};
   std::ostringstream &m_oss;
 
-public:
+ public:
   OOTurtle() = default;
   OOTurtle(std::ostringstream &);
   void move(meter_t);

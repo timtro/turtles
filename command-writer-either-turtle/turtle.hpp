@@ -1,11 +1,10 @@
 #pragma once
 
-#include "../include/nonconst-Pose.hpp"
-#include "../include/tfunc/overload.hpp"
-#include "../writer-either-monad-turtle/writer-either-monad.hpp"
-
 #include <numeric>
 #include <variant>
+
+#include "../include/nonconst-Pose.hpp"
+#include "../writer-either-monad-turtle/writer-either-monad.hpp"
 
 enum class turtleError { hitWall, couldNotRotate };
 

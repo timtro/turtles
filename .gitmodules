@@ -1,0 +1,3 @@
+[submodule "tfunc"]
+	path = tfunc
+	url = git@github.com:timtro/tfunc.git

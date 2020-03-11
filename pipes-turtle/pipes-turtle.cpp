@@ -1,15 +1,15 @@
-#include "../include/test_fixtures.hpp"
-#include "../include/tfunc/function-operations.hpp"
-
 #include "turtle.hpp"
 
-#include <catch/catch.hpp>
+#include <catch2/catch.hpp>
+
+#include "../include/test_fixtures.hpp"
+#include "../tfunc/include/function-operations.hpp"
 
 using test_fixtures::delta;
 
-TEST_CASE("Starting from some initial position, a pose should be roughly "
-          "invariant when mapped around a closed contour. Using …") {
-
+TEST_CASE(
+    "Starting from some initial position, a pose should be roughly "
+    "invariant when mapped around a closed contour. Using …") {
   const Pose initial{0_m, 0_m, 0_deg};
 
   SECTION("… dot-style piping.") {
@@ -28,7 +28,6 @@ TEST_CASE("Starting from some initial position, a pose should be roughly "
   }
 
   SECTION("… the crude function interface with intermediate variables") {
-
     const auto s1 = move(10_m, initial);
     const auto s2 = turn(120_deg, s1);
     const auto s3 = move(10_m, s2);
@@ -62,7 +61,6 @@ TEST_CASE("Starting from some initial position, a pose should be roughly "
   const auto cturn = tf::curry(::turn);
 
   SECTION("… curried functions and approximately point-free style") {
-
     // clang-format off
     const auto triangle = tf::compose(cmove(10_m),
                                       cturn(120_deg),
@@ -70,7 +68,7 @@ TEST_CASE("Starting from some initial position, a pose should be roughly "
                                       cturn(120_deg),
                                       cmove(10_m),
                                       cturn(120_deg));
-    
+
     const auto final = triangle(initial);
     // clang-format on
 
@@ -80,7 +78,6 @@ TEST_CASE("Starting from some initial position, a pose should be roughly "
   }
 
   SECTION("… curried functions and the pipe function template.") {
-
     // clang-format off
     const auto final = tf::pipe(initial,
                                 cmove(10_m),

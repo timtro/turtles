@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../include/tfunc/function_traits.hpp"
-
 #include <functional>
 #include <variant>
+
+#include "../tfunc/include/function_traits.hpp"
 
 // Error type is fixed in the monad:
 // class Monad m => MonadError e m | m -> e where

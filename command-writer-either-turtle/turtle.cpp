@@ -1,7 +1,9 @@
 #include "turtle.hpp"
-#include "../include/tfunc/function-operations.hpp"
 
 #include <vector>
+
+#include "../include/overload.hpp"
+#include "../tfunc/include/function-operations.hpp"
 
 using units::math::cos;
 using units::math::sin;
@@ -11,7 +13,7 @@ constexpr bool exceptionalError{false};
 // Same as writer-either-monad
 M<Pose> move(meter_t r, const Pose &p0) {
   std::stringstream log;
-  if (r > 100_m) { // Enables us to provoke an error in the unit test.
+  if (r > 100_m) {  // Enables us to provoke an error in the unit test.
     log << "hitWall\n";
     return {turtleError::hitWall, log.str()};
   } else {
@@ -41,9 +43,9 @@ const auto cmove = tf::curry(::move);
 const auto cturn = tf::curry(::turn);
 
 M<Pose> run(M<Pose> mp0, TurtleCommand cmd) {
-  auto handler = tf::overload(
+  auto handler = overload{
       [&mp0](TurtleMove mvcmd) { return mbind(mp0, cmove(mvcmd.distance)); },
-      [&mp0](TurtleTurn tncmd) { return mbind(mp0, cturn(tncmd.angle)); });
+      [&mp0](TurtleTurn tncmd) { return mbind(mp0, cturn(tncmd.angle)); }};
   return std::visit(handler, cmd);
 }
 
